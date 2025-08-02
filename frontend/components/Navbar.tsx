@@ -8,7 +8,7 @@ import { Button } from "./ui/button";
 
 // Placeholder: Replace with your auth context or hook (e.g., next-auth)
 const useAuth = () => ({
-  isAuthenticated: true, // Toggle to true for testing authenticated state
+  isAuthenticated: false, // Toggle to true for testing authenticated state
   user: { id: 1, name: "John Doe", email: "john@example.com" },
   logout: () =>
     fetch("/api/logout").then(() => (window.location.href = "/auth/login")),

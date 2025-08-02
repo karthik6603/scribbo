@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 
-// Placeholder: Replace with your auth solution (e.g., next-auth)
+// Placeholder auth hook – replace this with real logic (e.g., next-auth)
 const useAuth = () => ({
   isAuthenticated: false,
   user: { id: "", email: "" },
@@ -26,9 +26,16 @@ interface BlogForm {
 export default function CreateBlog() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<BlogForm>({
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<BlogForm>({
     mode: "onChange",
   });
+
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,9 +44,13 @@ export default function CreateBlog() {
     if (!isAuthenticated) {
       router.push("/auth/login");
     }
+
     register("content", {
       required: "Content is required",
-      minLength: { value: 10, message: "Content must be at least 10 characters" },
+      minLength: {
+        value: 10,
+        message: "Content must be at least 10 characters",
+      },
     });
   }, [isAuthenticated, router, register]);
 
@@ -56,6 +67,7 @@ export default function CreateBlog() {
           author: { id: user.id, email: user.email },
         }),
       });
+
       if (response.ok) {
         router.push("/blogs/my");
       } else {
@@ -79,6 +91,7 @@ export default function CreateBlog() {
         </h2>
         <div className="p-8 bg-white shadow-md rounded-xl">
           <Form.Root onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Title Field */}
             <Form.Field name="title" className="space-y-2">
               <Form.Label className="block text-sm font-medium text-text">
                 Title
@@ -88,7 +101,10 @@ export default function CreateBlog() {
                   type="text"
                   {...register("title", {
                     required: "Title is required",
-                    maxLength: { value: 100, message: "Title must be 100 characters or less" },
+                    maxLength: {
+                      value: 100,
+                      message: "Title must be 100 characters or less",
+                    },
                   })}
                   className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
                     errors.title ? "border-red-500" : "border-border"
@@ -98,12 +114,17 @@ export default function CreateBlog() {
                 />
               </Form.Control>
               {errors.title && (
-                <Form.Message className="text-sm text-red-500 flex items-center gap-1" id="title-error">
+                <Form.Message
+                  className="text-sm text-red-500 flex items-center gap-1"
+                  id="title-error"
+                >
                   <AlertCircle className="w-4 h-4" />
                   {errors.title.message}
                 </Form.Message>
               )}
             </Form.Field>
+
+            {/* Content Field */}
             <Form.Field name="content" className="space-y-2">
               <Form.Label className="block text-sm font-medium text-text">
                 Content
@@ -111,11 +132,13 @@ export default function CreateBlog() {
               <ReactQuill
                 theme="snow"
                 value={content}
-                onChange={(value:any) => {
+                onChange={(value: string) => {
                   setContent(value);
                   setValue("content", value);
                 }}
-                className={`border rounded-xl ${errors.content ? "border-red-500" : "border-border"}`}
+                className={`border rounded-xl ${
+                  errors.content ? "border-red-500" : "border-border"
+                }`}
                 modules={{
                   toolbar: [
                     [{ header: [1, 2, 3, false] }],
@@ -127,18 +150,25 @@ export default function CreateBlog() {
                 }}
               />
               {errors.content && (
-                <Form.Message className="text-sm text-red-500 flex items-center gap-1" id="content-error">
+                <Form.Message
+                  className="text-sm text-red-500 flex items-center gap-1"
+                  id="content-error"
+                >
                   <AlertCircle className="w-4 h-4" />
                   {errors.content.message}
                 </Form.Message>
               )}
             </Form.Field>
+
+            {/* Error Message */}
             {error && (
               <div className="bg-red-50 text-red-600 p-2 rounded flex items-center gap-2">
                 <AlertCircle className="w-5 h-5" />
                 <p className="text-sm">{error}</p>
               </div>
             )}
+
+            {/* Submit Button */}
             <Form.Submit asChild>
               <Button
                 disabled={isSubmitting}

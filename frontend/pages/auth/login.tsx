@@ -15,7 +15,11 @@ interface LoginForm {
 
 export default function Login() {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({
     mode: "onChange", // Real-time validation
   });
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +29,9 @@ export default function Login() {
     setIsSubmitting(true);
     setError(null);
     try {
-      const response = await fetch("/api/login", {
+      const API_URL =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -74,7 +80,10 @@ export default function Login() {
               />
             </Form.Control>
             {errors.email && (
-              <Form.Message className="text-sm text-red-500 flex items-center gap-1" id="email-error">
+              <Form.Message
+                className="text-sm text-red-500 flex items-center gap-1"
+                id="email-error"
+              >
                 <AlertCircle className="w-4 h-4" />
                 {errors.email.message}
               </Form.Message>
@@ -94,18 +103,25 @@ export default function Login() {
                     message: "Password must be at least 6 characters",
                   },
                   pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-                    message: "Password must include uppercase, lowercase, number, and special character",
+                    value:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                    message:
+                      "Password must include uppercase, lowercase, number, and special character",
                   },
                 })}
                 className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
                   errors.password ? "border-red-500" : "border-border"
                 }`}
-                aria-describedby={errors.password ? "password-error" : undefined}
+                aria-describedby={
+                  errors.password ? "password-error" : undefined
+                }
               />
             </Form.Control>
             {errors.password && (
-              <Form.Message className="text-sm text-red-500 flex items-center gap-1" id="password-error">
+              <Form.Message
+                className="text-sm text-red-500 flex items-center gap-1"
+                id="password-error"
+              >
                 <AlertCircle className="w-4 h-4" />
                 {errors.password.message}
               </Form.Message>

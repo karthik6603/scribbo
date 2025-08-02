@@ -8,9 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -19,6 +23,7 @@ public class UserService {
         if (userRepository.findByEmail(userDTO.getEmail()) != null) {
             throw new RuntimeException("Email already exists");
         }
+
         User user = new User();
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
@@ -31,6 +36,12 @@ public class UserService {
         if (user == null || !passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
-        return jwtUtil.generateToken(user.getEmail(), user.getId());
+
+        // Build claims map
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", String.valueOf(user.getId()));
+        claims.put("email", user.getEmail());
+
+        return jwtUtil.generateToken(claims, user.getEmail());
     }
 }

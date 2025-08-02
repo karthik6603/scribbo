@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.scribbo</groupId>
-	<artifactId>Scribbo</artifactId>
+	<artifactId>scribbo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Scribbo</name>
+	<name>scribbo</name>
 	<description>A full Stack Blog Application</description>
 	<url/>
 	<licenses>
@@ -75,6 +75,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
