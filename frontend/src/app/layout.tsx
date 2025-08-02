@@ -15,6 +15,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Scribbo",
   description: "A platform for sharing and discovering stories",
+  openGraph: {
+    title: "Scribbo",
+    description: "A platform for sharing and discovering stories",
+    url: "https://scribbo.example.com",
+    siteName: "Scribbo",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

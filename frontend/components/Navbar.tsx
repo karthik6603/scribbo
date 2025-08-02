@@ -8,9 +8,10 @@ import { Button } from "./ui/button";
 
 // Placeholder: Replace with your auth context or hook (e.g., next-auth)
 const useAuth = () => ({
-  isAuthenticated: false, // Toggle to true for testing authenticated state
+  isAuthenticated: true, // Toggle to true for testing authenticated state
   user: { id: 1, name: "John Doe", email: "john@example.com" },
-  logout: () => fetch("/api/logout").then(() => window.location.href = "/auth/login"),
+  logout: () =>
+    fetch("/api/logout").then(() => (window.location.href = "/auth/login")),
 });
 
 export default function Navbar() {
@@ -45,7 +46,11 @@ export default function Navbar() {
         </Link>
         <div className="md:hidden">
           <Button variant="ghost" onClick={toggleMenu}>
-            {isMenuOpen ? <X className="w-6 h-6 text-text" /> : <Menu className="w-6 h-6 text-text" />}
+            {isMenuOpen ? (
+              <X className="w-6 h-6 text-text" />
+            ) : (
+              <Menu className="w-6 h-6 text-text" />
+            )}
           </Button>
         </div>
         <div className="hidden md:flex space-x-4 items-center">
@@ -63,14 +68,18 @@ export default function Navbar() {
             <>
               <Link
                 href="/blogs/create"
-                className="text-base font-medium px-3 py-2 rounded transition text-text hover:text-primary hover:bg-primary/10"
+                className={`text-base font-medium px-3 py-2 rounded transition ${
+                  pathname === "/blogs/create"
+                    ? "gradient-text border-b-2 border-primary"
+                    : "text-text hover:text-primary hover:bg-primary/10"
+                }`}
               >
                 Create Blog
               </Link>
               <Link
-                href="/blogs/my"
+                href="/blogs/my-blogs"
                 className={`text-base font-medium px-3 py-2 rounded transition ${
-                  pathname === "/blogs/my"
+                  pathname === "/blogs/my-blogs"
                     ? "gradient-text border-b-2 border-primary"
                     : "text-text hover:text-primary hover:bg-primary/10"
                 }`}
@@ -89,8 +98,12 @@ export default function Navbar() {
                 </Button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-xl p-4 space-y-2 z-50">
-                    <p className="text-sm font-semibold text-text">{user.name}</p>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <p className="text-sm font-semibold text-text">
+                      {user.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {user.email}
+                    </p>
                     <Button
                       variant="destructive"
                       className="w-full text-sm bg-red-600 text-white hover:bg-red-700"
