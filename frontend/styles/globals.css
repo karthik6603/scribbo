@@ -117,6 +117,10 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* .gradient-text {
+  @apply bg-gradient-to-r-primary bg-clip-text text-transparent;
+} */
+
 
 @layer base {
   * {
