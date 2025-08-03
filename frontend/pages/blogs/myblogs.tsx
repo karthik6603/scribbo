@@ -34,7 +34,7 @@ export default function MyBlogsPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/blogs/myblogs?page=${page}&limit=10`,
+        `${process.env.NEXT_PUBLIC_API_URL}/blogs/myblogs?page=${page}&limit=10`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ export default function MyBlogsPage() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/blogs/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

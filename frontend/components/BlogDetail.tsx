@@ -10,7 +10,7 @@ export default function BlogDetail() {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/blogs/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${id}`)
         .then((res) => res.json())
         .then((data) => setBlog(data))
         .catch((err) => console.error("Failed to fetch blog:", err));

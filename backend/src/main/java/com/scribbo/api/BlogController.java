@@ -50,12 +50,10 @@ public class BlogController {
     }
 
 
-
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Blog> getBlogById(@PathVariable String id) {
-//        return ResponseEntity.ok(blogService.getBlogById(id));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Blog> getBlogById(@PathVariable String id) {
+        return ResponseEntity.ok(blogService.getBlogById(id));
+    }
 
     @PostMapping
     public ResponseEntity<Blog> createBlog(

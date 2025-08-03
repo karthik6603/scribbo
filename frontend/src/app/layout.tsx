@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Scribbo",
     description: "A platform for sharing and discovering stories",
-    url: "https://scribbo.example.com",
+    url: "",
     siteName: "Scribbo",
     type: "website",
   },

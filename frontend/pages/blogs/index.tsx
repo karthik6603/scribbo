@@ -25,7 +25,7 @@ export default function BlogList() {
       try {
         setIsLoading(true);
         const res = await fetch(
-          `http://localhost:8080/blogs?page=${page + 1}&limit=${pageSize}`
+          `${process.env.NEXT_PUBLIC_API_URL}/blogs?page=${page + 1}&limit=${pageSize}`
         );
         if (!res.ok) throw new Error("Failed to fetch blogs");
         const data = await res.json();

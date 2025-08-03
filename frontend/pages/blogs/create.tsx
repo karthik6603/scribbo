@@ -84,7 +84,7 @@
 //     }
 
 //     try {
-//       const res = await fetch("http://localhost:8080/blogs", {
+//       const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/blogs", {
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",

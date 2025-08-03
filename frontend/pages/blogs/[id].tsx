@@ -13,7 +13,7 @@ export default function BlogDetail() {
 
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/blogs/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "application/json",
