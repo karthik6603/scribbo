@@ -33,11 +33,14 @@ export default function MyBlogsPage() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/blogs/myblogs?page=${page}&limit=10`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:8080/blogs/myblogs?page=${page}&limit=10`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Fetch failed with status ${response.status}`);
@@ -94,17 +97,25 @@ export default function MyBlogsPage() {
       ) : (
         blogs.map((blog) => (
           <div key={blog.id} className="border rounded-md p-4 mb-4 shadow-sm">
-            <Link href={`/blogs/${blog.id}`} className="text-xl font-semibold hover:underline">
+            <Link
+              href={`/blogs/${blog.id}`}
+              className="text-xl font-semibold hover:underline"
+            >
               {blog.title}
             </Link>
             <p className="text-sm text-gray-500 mt-1">By {blog.author.email}</p>
-            <p className="mt-2 line-clamp-3">{blog.content}</p>
+            <p
+              className="mt-2 line-clamp-3"
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            ></p>
 
             <div className="mt-4 flex space-x-2">
-              <Link href={`/blogs/edit/${blog.id}`}>
-                <Button variant="outline">Edit</Button>
-              </Link>
-              <Button variant="destructive" onClick={() => handleDelete(blog.id)}>
+              <Link href={`/blogs/edit/${blog.id}`}>Edit</Link>
+
+              <Button
+                variant="destructive"
+                onClick={() => handleDelete(blog.id)}
+              >
                 Delete
               </Button>
             </div>
@@ -125,7 +136,9 @@ export default function MyBlogsPage() {
           Page {currentPage} of {totalPages}
         </span>
         <Button
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
           disabled={currentPage === totalPages}
           variant="outline"
         >

@@ -1,25 +1,30 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState, FC } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
+import {
+  LexicalComposer,
+  InitialConfigType,
+} from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { $generateHtmlFromNodes } from "@lexical/html";
+
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { ListNode, ListItemNode } from "@lexical/list";
+import { CodeNode } from "@lexical/code";
+import { LinkNode, AutoLinkNode } from "@lexical/link";
+import { EditorState } from "lexical";
+
 import { Button } from "@/components/ui/button";
-import "froala-editor/css/froala_style.min.css";
-import "froala-editor/css/froala_editor.pkgd.min.css";
+import "@/pages/blogs/editor.css";
 
-        
-// Require Editor CSS files.
-// import 'froala-editor/css/froala_style.min.css';
-// import 'froala-editor/css/froala_editor.pkgd.min.css';
-        
-// import FroalaEditorComponent from 'react-froala-wysiwyg'
-
-
-const FroalaEditorComponent = dynamic(
-  () => import("react-froala-wysiwyg"),
-  { ssr: false }
-);
+import HTMLInjectionPlugin from "@/components/HTMLInjectionPlugin";
+ // Assuming you have this plugin
 
 interface FormData {
   title: string;
@@ -30,7 +35,7 @@ interface BlogFormProps {
   blogId?: string;
 }
 
-const BlogForm = ({ blogId }: BlogFormProps) => {
+const BlogForm: FC<BlogFormProps> = ({ blogId }) => {
   const {
     register,
     handleSubmit,
@@ -39,19 +44,27 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
   } = useForm<FormData>();
 
   const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState("<p></p>");
   const router = useRouter();
+  const contentRef = useRef("");
 
-  const config = {
-    placeholderText: "Write your blog content here...",
-    charCounterCount: false,
-    toolbarButtons: [
-      ["undo", "redo", "bold", "italic", "underline", "formatOL", "formatUL", "insertLink", "insertImage", "html"]
+  const editorConfig: InitialConfigType = {
+    namespace: "MinimalEditor",
+    theme: {},
+    onError: (error) => console.error(error),
+    nodes: [
+      HeadingNode,
+      QuoteNode,
+      ListNode,
+      ListItemNode,
+      CodeNode,
+      LinkNode,
+      AutoLinkNode,
     ],
   };
 
   const fetchBlog = async () => {
     if (!blogId) return;
+
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`http://localhost:8080/blogs/${blogId}`, {
@@ -64,11 +77,19 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
       const data = await res.json();
       setValue("title", data.title);
       setValue("content", data.content);
-      setContent(data.content);
+      contentRef.current = data.content;
     } catch (err) {
       alert("Could not load blog for editing");
       router.push("/blogs");
     }
+  };
+
+  const onEditorChange = (editorState: EditorState, editor: any) => {
+    editor.read(() => {
+      const html = $generateHtmlFromNodes(editor);
+      contentRef.current = html;
+      setValue("content", html);
+    });
   };
 
   const onSubmit = async (data: FormData) => {
@@ -77,7 +98,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
 
     const blogPayload = {
       title: data.title.trim(),
-      content: content.trim(),
+      content: contentRef.current.trim(),
     };
 
     if (!blogPayload.content) {
@@ -133,15 +154,25 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
           )}
         </div>
 
-        <FroalaEditorComponent
-          tag='textarea'
-          model={content}
-          onModelChange={(value: string) => {
-            setContent(value);
-            setValue("content", value);
-          }}
-          config={config}
-        />
+        <LexicalComposer initialConfig={editorConfig}>
+          <div className="border rounded">
+            <RichTextPlugin
+              contentEditable={
+                <ContentEditable className="editor-input px-4 py-3 min-h-[200px] outline-none" />
+              }
+              placeholder={
+                <div className="editor-placeholder px-4 py-3 text-gray-400">
+                  Write your blog content here...
+                </div>
+              }
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <HistoryPlugin />
+            <OnChangePlugin onChange={onEditorChange} />
+          </div>
+        </LexicalComposer>
+
+        {/* <FroalaEditorComponent tag='textarea'/> */}
 
         <input
           type="hidden"
