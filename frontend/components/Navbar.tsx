@@ -109,9 +109,9 @@ export default function Navbar() {
                 Create Blog
               </Link>
               <Link
-                href="/blogs/my-blogs"
+                href="/blogs/myblogs"
                 className={`text-base font-medium px-3 py-2 rounded transition ${
-                  pathname === "/blogs/my-blogs"
+                  pathname === "/blogs/myblogs"
                     ? "gradient-text border-b-2 border-primary"
                     : "text-text hover:text-primary hover:bg-primary/10"
                 }`}

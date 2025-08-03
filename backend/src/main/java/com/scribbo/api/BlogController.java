@@ -1,6 +1,7 @@
 package com.scribbo.api;
 
 import com.scribbo.dto.BlogDTO;
+import com.scribbo.dto.BlogPageResponse;
 import com.scribbo.entity.Blog;
 import com.scribbo.jwt.JwtUtil;
 import com.scribbo.service.BlogService;
@@ -27,10 +28,34 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getAllBlogs(pageable, userId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Blog> getBlogById(@PathVariable String id) {
-        return ResponseEntity.ok(blogService.getBlogById(id));
+    @GetMapping("/myblogs")
+    public ResponseEntity<BlogPageResponse> getMyBlogs(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        String jwt = authHeader.substring(7);
+        String userId = jwtUtil.getUserIdFromToken(jwt);
+
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<Blog> userBlogs = blogService.getAllBlogs(pageable, userId);
+
+        BlogPageResponse response = new BlogPageResponse(
+                userBlogs.getContent(),
+                userBlogs.getTotalPages(),
+                page
+        );
+
+        return ResponseEntity.ok(response);
     }
+
+
+
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Blog> getBlogById(@PathVariable String id) {
+//        return ResponseEntity.ok(blogService.getBlogById(id));
+//    }
 
     @PostMapping
     public ResponseEntity<Blog> createBlog(

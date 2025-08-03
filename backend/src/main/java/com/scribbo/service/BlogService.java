@@ -20,6 +20,11 @@ public class BlogService {
         return blogRepository.findAll(pageable);
     }
 
+    public Page<Blog> getBlogsByAuthorId(String userId, Pageable pageable) {
+        return blogRepository.findByAuthorId(userId, pageable);
+    }
+
+
     public Blog getBlogById(String id) {
         return blogRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Blog not found"));
