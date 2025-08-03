@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 export default function BlogDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const [blog, setBlog] = useState<any>(null);
+  const [blog, setBlog] = useState<unknown>(null);
 
   useEffect(() => {
     if (id) {
@@ -21,9 +21,9 @@ export default function BlogDetail() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-2">{blog.title}</h1>
-      <p className="text-sm text-gray-500 mb-4">By {blog.author}</p>
-      <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+      <h1 className="text-3xl font-bold mb-2">{(blog as any).title}</h1>
+      <p className="text-sm text-gray-500 mb-4">By {(blog as any).author}</p>
+      <div dangerouslySetInnerHTML={{ __html: (blog as any).content }} />
     </div>
   );
 }

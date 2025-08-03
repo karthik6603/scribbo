@@ -177,7 +177,7 @@ export default function Login() {
             <CheckCircle className="w-10 h-10 text-green-500 mx-auto" />
             <Dialog.Title className="text-xl font-semibold text-text">Login Successful</Dialog.Title>
             <Dialog.Description className="text-sm text-muted-foreground">
-              You're being redirected to the blogs page.
+              You are being redirected to the blogs page.
             </Dialog.Description>
             <Button
               onClick={() => {

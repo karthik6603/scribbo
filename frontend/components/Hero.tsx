@@ -134,7 +134,7 @@ export function Hero() {
         <div className="max-w-2xl mx-auto space-y-6">
           <h2 className="text-3xl md:text-4xl font-bold">Ready to share your voice?</h2>
           <p className="text-lg md:text-xl">
-            Join the community and publish your first story today. It's free!
+            Join the community and publish your first story today. It&apos;s free!
           </p>
           <Button
             size="lg"

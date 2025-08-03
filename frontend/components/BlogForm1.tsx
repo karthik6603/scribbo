@@ -84,9 +84,9 @@ const BlogForm: FC<BlogFormProps> = ({ blogId }) => {
     }
   };
 
-  const onEditorChange = (editorState: EditorState, editor: any) => {
-    editor.read(() => {
-      const html = $generateHtmlFromNodes(editor);
+  const onEditorChange = (editorState: EditorState, editor: unknown) => {
+    (editor as any).read(() => {
+      const html = $generateHtmlFromNodes(editor as any);
       contentRef.current = html;
       setValue("content", html);
     });

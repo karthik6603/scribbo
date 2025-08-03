@@ -52,8 +52,8 @@ export default function MyBlogsPage() {
       setBlogs(data.blogs);
       setCurrentPage(data.currentPage);
       setTotalPages(data.totalPages);
-    } catch (error: any) {
-      console.error("Error fetching blogs:", error.message, error);
+    } catch (error: unknown) {
+      console.error("Error fetching blogs:", (error as Error).message, error);
     }
   };
 
@@ -79,8 +79,8 @@ export default function MyBlogsPage() {
 
       // Refresh blog list after deletion
       fetchBlogs(currentPage);
-    } catch (error: any) {
-      console.error("Error deleting blog:", error.message, error);
+    } catch (error: unknown) {
+      console.error("Error deleting blog:", (error as Error).message, error);
     }
   };
 
