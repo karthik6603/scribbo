@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 export default function Home() {
   return (
     <div className="space-y-12">
-      <Navbar />
+      {/* <Navbar /> */}
       <Hero />
       <section>
         <div className="text-center mb-8">

@@ -2,41 +2,73 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
-import { Menu, X, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
 import { Button } from "./ui/button";
 
-// Placeholder: Replace with your auth context or hook (e.g., next-auth)
-const useAuth = () => ({
-  isAuthenticated: false, // Toggle to true for testing authenticated state
-  user: { id: 1, name: "John Doe", email: "john@example.com" },
-  logout: () =>
-    fetch("/api/logout").then(() => (window.location.href = "/auth/login")),
-});
+interface DecodedToken {
+  id: string;
+  name: string;
+  email: string;
+  exp: number;
+}
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, user, logout } = useAuth();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<DecodedToken | null>(null);
+  const [loading, setLoading] = useState(true); // ✨ loading state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Hide navbar on login or signup pages
-  if (pathname === "/auth/login" || pathname === "/auth/signup") {
-    return null;
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        if (decoded.exp * 1000 > Date.now()) {
+          setIsAuthenticated(true);
+          setUser(decoded);
+        } else {
+          localStorage.removeItem("token");
+        }
+      } catch {
+        localStorage.removeItem("token");
+      }
+    }
+    setLoading(false); // ✅ hydration complete
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    setUser(null);
+    router.push("/auth/login");
+  };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-  const getInitials = (name: string) => {
+  const getInitials = (name?: string) => {
+    if (!name) return "👤";
     return name
+      .trim()
       .split(" ")
       .map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
   };
+
+  // ❌ Don't render on auth pages
+  if (pathname === "/auth/login" || pathname === "/auth/signup") return null;
+
+  // ✅ Wait until hydration completes
+  if (loading) return null;
+
 
   return (
     <nav className="w-full bg-gradient-to-r from-background to-accent/10 shadow-md sticky top-0 z-50 backdrop-blur-md">
@@ -64,7 +96,7 @@ export default function Navbar() {
           >
             Blogs
           </Link>
-          {isAuthenticated ? (
+          {isAuthenticated && user ? (
             <>
               <Link
                 href="/blogs/create"
@@ -153,7 +185,7 @@ export default function Navbar() {
           >
             Blogs
           </Link>
-          {isAuthenticated ? (
+          {isAuthenticated && user ? (
             <>
               <Link
                 href="/blogs/create"
@@ -163,9 +195,9 @@ export default function Navbar() {
                 Create Blog
               </Link>
               <Link
-                href="/blogs/my"
+                href="/blogs/my-blogs"
                 className={`text-base font-medium px-3 py-2 rounded transition ${
-                  pathname === "/blogs/my"
+                  pathname === "/blogs/my-blogs"
                     ? "gradient-text border-b-2 border-primary"
                     : "text-text hover:text-primary hover:bg-primary/10"
                 }`}

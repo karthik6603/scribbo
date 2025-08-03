@@ -1,0 +1,21 @@
+/* /frontend/editor.css */
+.editor {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  min-height: 200px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+/* Ensure your editor has spacing and looks editable */
+.editor-container {
+  min-height: 200px;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: white;
+}
+
+.editor-container:focus {
+  outline: none;
+  border-color: #6366f1;
+}
