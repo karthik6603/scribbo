@@ -42,7 +42,7 @@ export function Hero() {
             <Button
               size="lg"
               asChild
-              className="text-lg px-8 py-3 border border-zinc-300 text-zinc-700 hover:bg-zinc-100 transition-all rounded-xl"
+              className="text-lg px-8 py-3 bg-black text-white hover:bg-zinc-800 shadow-md transition-all rounded-xl"
             >
               <Link href="/blogs">
                 <BookOpen className="w-5 h-5 mr-2" />
@@ -85,7 +85,7 @@ export function Hero() {
       {/* Why Scribbo Section */}
       <section className="py-16 px-4 border-t border-zinc-200 bg-zinc-50">
         <div className="max-w-6xl mx-auto text-center space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-cyan-600">Why Scribbo?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-zinc-900">Why Scribbo?</h2>
           <div className="grid md:grid-cols-3 gap-6 text-left">
             {[
               {
