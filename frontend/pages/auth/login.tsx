@@ -35,7 +35,8 @@ export default function Login() {
     setError(null);
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL}`;
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,15 +46,22 @@ export default function Login() {
         }),
       });
 
-      const text = await response.text();
-      const result = response.ok ? { token: text } : JSON.parse(text);
+      const contentType = response.headers.get("content-type");
+      const isJson = contentType && contentType.includes("application/json");
+
+      const payload = isJson ? await response.json() : await response.text();
 
       if (response.ok) {
-        localStorage.setItem("token", result.token);
-        dispatch(loginSuccess({ token: result.token }));
-        setShowModal(true); // trigger modal
+        const token = typeof payload === "string" ? payload : payload.token;
+        localStorage.setItem("token", token);
+        dispatch(loginSuccess({ token }));
+        setShowModal(true);
       } else {
-        setError(result.message || "Login failed. Please try again.");
+        const errorMessage =
+          typeof payload === "string"
+            ? payload
+            : payload?.message || "Login failed.";
+        setError(errorMessage);
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -74,7 +82,9 @@ export default function Login() {
           <Form.Root onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email Field */}
             <Form.Field name="email" className="space-y-2">
-              <Form.Label className="block text-sm font-medium text-text">Email</Form.Label>
+              <Form.Label className="block text-sm font-medium text-text">
+                Email
+              </Form.Label>
               <Form.Control asChild>
                 <input
                   type="email"
@@ -92,7 +102,10 @@ export default function Login() {
                 />
               </Form.Control>
               {errors.email && (
-                <Form.Message className="text-sm text-red-500 flex items-center gap-1" id="email-error">
+                <Form.Message
+                  className="text-sm text-red-500 flex items-center gap-1"
+                  id="email-error"
+                >
                   <AlertCircle className="w-4 h-4" />
                   {errors.email.message}
                 </Form.Message>
@@ -101,7 +114,9 @@ export default function Login() {
 
             {/* Password Field */}
             <Form.Field name="password" className="space-y-2">
-              <Form.Label className="block text-sm font-medium text-text">Password</Form.Label>
+              <Form.Label className="block text-sm font-medium text-text">
+                Password
+              </Form.Label>
               <Form.Control asChild>
                 <input
                   type="password"
@@ -121,11 +136,16 @@ export default function Login() {
                   className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
                     errors.password ? "border-red-500" : "border-border"
                   }`}
-                  aria-describedby={errors.password ? "password-error" : undefined}
+                  aria-describedby={
+                    errors.password ? "password-error" : undefined
+                  }
                 />
               </Form.Control>
               {errors.password && (
-                <Form.Message className="text-sm text-red-500 flex items-center gap-1" id="password-error">
+                <Form.Message
+                  className="text-sm text-red-500 flex items-center gap-1"
+                  id="password-error"
+                >
                   <AlertCircle className="w-4 h-4" />
                   {errors.password.message}
                 </Form.Message>
@@ -165,17 +185,22 @@ export default function Login() {
       </div>
 
       {/* ✅ Radix Modal on Successful Login */}
-      <Dialog.Root open={showModal} onOpenChange={(open) => {
-        if (!open) {
-          setShowModal(false);
-          router.push("/blogs");
-        }
-      }}>
+      <Dialog.Root
+        open={showModal}
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowModal(false);
+            router.push("/blogs");
+          }
+        }}
+      >
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" />
           <Dialog.Content className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-xl w-full max-w-sm space-y-4 text-center">
             <CheckCircle className="w-10 h-10 text-green-500 mx-auto" />
-            <Dialog.Title className="text-xl font-semibold text-text">Login Successful</Dialog.Title>
+            <Dialog.Title className="text-xl font-semibold text-text">
+              Login Successful
+            </Dialog.Title>
             <Dialog.Description className="text-sm text-muted-foreground">
               You are being redirected to the blogs page.
             </Dialog.Description>
