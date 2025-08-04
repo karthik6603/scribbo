@@ -23,6 +23,7 @@
     "@radix-ui/react-toast": "^1.2.14",
     "@reduxjs/toolkit": "^2.8.2",
     "@tiptap/extension-link": "^3.0.9",
+    "@tiptap/extension-text-style": "^3.0.9",
     "@tiptap/extension-underline": "^3.0.9",
     "@tiptap/react": "^3.0.9",
     "@tiptap/starter-kit": "^3.0.9",

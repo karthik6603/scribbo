@@ -8,6 +8,10 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import Paragraph from "@tiptap/extension-paragraph";
+import { TextStyle } from "@tiptap/extension-text-style";
 import {
   Bold,
   Italic,
@@ -43,7 +47,15 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
   const router = useRouter();
 
   const editor = useEditor({
-    extensions: [StarterKit, Underline, Link.configure({ openOnClick: true })],
+    extensions: [
+      StarterKit,
+      Underline,
+      Link.configure({ openOnClick: false }),
+      BulletList,
+      OrderedList,
+      Paragraph,
+      TextStyle,
+    ],
     content: initialContent,
     editorProps: {
       attributes: {
@@ -57,28 +69,32 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
     },
   });
 
-  const fetchBlog = async () => {
-    if (!blogId) return;
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (!res.ok) throw new Error("Failed to fetch blog");
+  useEffect(() => {
+    const fetchBlog = async () => {
+      if (!blogId) return;
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (!res.ok) throw new Error("Failed to fetch blog");
 
-      const data = await res.json();
-      setValue("title", data.title);
-      setValue("content", data.content);
-      setInitialContent(data.content);
-      editor?.commands.setContent(data.content);
-    } catch (err) {
-      alert("Could not load blog for editing");
-      router.push("/blogs");
-    }
-  };
+        const data = await res.json();
+        setValue("title", data.title);
+        setValue("content", data.content);
+        setInitialContent(data.content);
+        editor?.commands.setContent(data.content);
+      } catch (err) {
+        alert("Could not load blog for editing");
+        router.push("/blogs");
+      }
+    };
+
+    if (editor) fetchBlog();
+  }, [blogId, editor]);
 
   const onSubmit = async (data: FormData) => {
     const token = localStorage.getItem("token");
@@ -117,44 +133,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
     }
   };
 
-  useEffect(() => {
-  const loadBlog = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return router.push("/login");
-    if (!blogId) return;
-
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to fetch blog");
-
-      const data = await res.json();
-
-      setValue("title", data.title);
-      setValue("content", data.content);
-      setInitialContent(data.content);
-
-      // ✨ Wait for editor to be mounted
-      if (editor) {
-        editor.commands.setContent(data.content);
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Could not load blog for editing");
-      router.push("/blogs");
-    }
-  };
-
-  loadBlog();
-}, [blogId, editor]); // 👈 watch for both blogId AND editor
-
+  const isActive = (type: string) => editor?.isActive(type);
 
   return (
     <div className="max-w-3xl mx-auto mt-12 bg-white p-8 rounded-2xl shadow-lg">
@@ -163,7 +142,6 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Title Input */}
         <div>
           <input
             type="text"
@@ -176,7 +154,6 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
           )}
         </div>
 
-        {/* Editor Toolbar */}
         {editor && (
           <div className="flex flex-wrap gap-3 border border-gray-200 p-3 rounded-md bg-gray-50 items-center">
             <button
@@ -184,35 +161,55 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
               onClick={() => editor.chain().focus().toggleBold().run()}
               title="Bold"
             >
-              <Bold className="w-5 h-5 text-gray-600 hover:text-black" />
+              <Bold
+                className={`w-5 h-5 ${
+                  isActive("bold") ? "text-black" : "text-gray-600"
+                }`}
+              />
             </button>
             <button
               type="button"
               onClick={() => editor.chain().focus().toggleItalic().run()}
               title="Italic"
             >
-              <Italic className="w-5 h-5 text-gray-600 hover:text-black" />
+              <Italic
+                className={`w-5 h-5 ${
+                  isActive("italic") ? "text-black" : "text-gray-600"
+                }`}
+              />
             </button>
             <button
               type="button"
               onClick={() => editor.chain().focus().toggleUnderline().run()}
               title="Underline"
             >
-              <UnderlineIcon className="w-5 h-5 text-gray-600 hover:text-black" />
+              <UnderlineIcon
+                className={`w-5 h-5 ${
+                  isActive("underline") ? "text-black" : "text-gray-600"
+                }`}
+              />
             </button>
             <button
               type="button"
               onClick={() => editor.chain().focus().toggleBulletList().run()}
               title="Bullet List"
             >
-              <List className="w-5 h-5 text-gray-600 hover:text-black" />
+              <List
+                className={`w-5 h-5 ${
+                  isActive("bulletList") ? "text-black" : "text-gray-600"
+                }`}
+              />
             </button>
             <button
               type="button"
               onClick={() => editor.chain().focus().toggleOrderedList().run()}
               title="Numbered List"
             >
-              <ListOrdered className="w-5 h-5 text-gray-600 hover:text-black" />
+              <ListOrdered
+                className={`w-5 h-5 ${
+                  isActive("orderedList") ? "text-black" : "text-gray-600"
+                }`}
+              />
             </button>
             <button
               type="button"
@@ -236,19 +233,26 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
               onClick={() => editor.chain().focus().toggleCodeBlock().run()}
               title="Code Block"
             >
-              <Code className="w-5 h-5 text-gray-600 hover:text-black" />
+              <Code
+                className={`w-5 h-5 ${
+                  isActive("codeBlock") ? "text-black" : "text-gray-600"
+                }`}
+              />
             </button>
             <button
               type="button"
               onClick={() => editor.chain().focus().setParagraph().run()}
               title="Paragraph"
             >
-              <FileText className="w-5 h-5 text-gray-600 hover:text-black" />
+              <FileText
+                className={`w-5 h-5 ${
+                  isActive("paragraph") ? "text-black" : "text-gray-600"
+                }`}
+              />
             </button>
           </div>
         )}
 
-        {/* Blog Content Editor */}
         <div>
           <EditorContent editor={editor} />
           <input
@@ -262,7 +266,6 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
           )}
         </div>
 
-        {/* Submit Button */}
         <Button
           type="submit"
           disabled={loading}
