@@ -118,10 +118,43 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
   };
 
   useEffect(() => {
+  const loadBlog = async () => {
     const token = localStorage.getItem("token");
     if (!token) return router.push("/login");
-    if (blogId) fetchBlog();
-  }, [blogId]);
+    if (!blogId) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch blog");
+
+      const data = await res.json();
+
+      setValue("title", data.title);
+      setValue("content", data.content);
+      setInitialContent(data.content);
+
+      // ✨ Wait for editor to be mounted
+      if (editor) {
+        editor.commands.setContent(data.content);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Could not load blog for editing");
+      router.push("/blogs");
+    }
+  };
+
+  loadBlog();
+}, [blogId, editor]); // 👈 watch for both blogId AND editor
+
 
   return (
     <div className="max-w-3xl mx-auto mt-12 bg-white p-8 rounded-2xl shadow-lg">
