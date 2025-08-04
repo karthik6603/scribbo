@@ -174,7 +174,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
                     (editor.chain().focus() as any)[commandKey]?.().run()
                   }
                   title={action}
-                  className="mx-1 p-2 rounded-md bg-gray-600 hover:bg-gray-500 text-white transition-colors"
+                  className="mx-1 p-2 rounded-md bg-gray-700 hover:bg-gray-600 text-white transition-colors"
                 >
                   <Icon
                     className={`w-5 h-5 transition-all duration-150 ${

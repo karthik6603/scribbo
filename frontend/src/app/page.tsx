@@ -8,7 +8,7 @@ export default function Home() {
       {/* <Navbar /> */}
       <Hero />
       <section>
-        <div className="text-center mb-8">
+        {/* <div className="text-center mb-8">
           <h2 className="text-3xl font-bold gradient-text mb-4">
             Latest Stories
           </h2>
@@ -17,7 +17,7 @@ export default function Home() {
             insights to personal journeys, find content that inspires and
             informs.
           </p>
-        </div>
+        </div> */}
         <Footer />
       </section>
     </div>

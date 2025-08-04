@@ -41,7 +41,7 @@ export default function Navbar() {
     <nav className="w-full bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-primary">
+        <Link href="/" className="text-2xl font-bold gradient-text">
           Scribbo
         </Link>
 
@@ -75,7 +75,7 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg p-4 space-y-2 z-50">
                     <div className="space-y-1">
                       <p className="text-sm font-semibold text-gray-800">{user.name}</p>
-                      <p className="text-sm text-gray-500">{user.email}</p>
+                      <p className="text-sm text-gray-500">{user.name}</p>
                     </div>
                     <Button
                       variant="destructive"

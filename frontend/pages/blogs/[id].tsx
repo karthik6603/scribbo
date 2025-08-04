@@ -50,8 +50,8 @@ export default function BlogDetail() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-extrabold mb-4 text-primary-foreground">{blog.title}</h1>
-      <p className="text-sm text-muted-foreground mb-6">By {blog.author.email}</p>
+      <h1 className="text-4xl font-extrabold mb-4 text-black">{blog.title}</h1>
+      <p className="text-sm text-gray-600 mb-6">By {blog.author.email}</p>
 
       <div
         className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none text-gray-800"

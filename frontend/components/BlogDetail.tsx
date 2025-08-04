@@ -47,14 +47,14 @@ export default function BlogDetail() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+      <h1 className="text-4xl font-bold text-gray-900 mb-2">
         {blog.title}
       </h1>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+      <p className="text-sm text-gray-600 mb-6">
         By {blog.author}
       </p>
       <div
-        className="prose dark:prose-invert max-w-none"
+        className="prose max-w-none"
         dangerouslySetInnerHTML={{ __html: blog.content }}
       />
     </div>

@@ -6,13 +6,13 @@ export function Hero() {
   return (
     <div className="bg-white text-zinc-900">
       {/* Hero Banner */}
-      <section className="w-full py-18 px-4">
+      <section className="w-full py-16 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex justify-center mb-6">
-            <div className="flex items-center gap-2 bg-zinc-100 text-cyan-600 px-4 py-2 rounded-full text-sm font-medium shadow">
+            <div className="flex items-center gap-2 bg-zinc-100 text-zinc-600 px-4 py-2 rounded-full text-sm font-medium shadow">
               <Sparkles className="w-4 h-4 animate-pulse" />
               Welcome to{" "}
-              <span className="font-bold text-cyan-500">Scribbo</span>
+              <span className="font-bold gradient-text">Scribbo</span>
             </div>
           </div>
 
