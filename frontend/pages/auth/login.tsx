@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
@@ -8,8 +8,7 @@ import * as Form from "@radix-ui/react-form";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, CheckCircle } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "@/store/authSlice";
+import { AuthContext, useAuth } from "@/context/AuthContext";
 
 interface LoginForm {
   email: string;
@@ -18,7 +17,7 @@ interface LoginForm {
 
 export default function Login() {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const { login } = useAuth();
 
   const {
     register,
@@ -54,15 +53,12 @@ export default function Login() {
 
       const payload = await response.json();
 
-      console.log("Payload from backend:", payload); // 👈 DEBUG LINE
-
       if (response.ok) {
         const token = payload.token;
         if (!token) throw new Error("Token is undefined in payload");
 
-        localStorage.setItem("token", token);
-        dispatch(loginSuccess({ token }));
-        setShowModal(true);
+        login(token); // ⬅️ Update context, sets token in localStorage too
+        setShowModal(true); // show success modal
       } else {
         setError(payload.message || "Login failed. Please try again.");
       }
@@ -72,6 +68,7 @@ export default function Login() {
     }
     setIsSubmitting(false);
   };
+
   return (
     <>
       {/* 🔐 Login UI */}

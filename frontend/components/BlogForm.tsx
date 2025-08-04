@@ -1,25 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
-import "froala-editor/css/froala_style.min.css";
-import "froala-editor/css/froala_editor.pkgd.min.css";
-
-        
-// Require Editor CSS files.
-// import 'froala-editor/css/froala_style.min.css';
-// import 'froala-editor/css/froala_editor.pkgd.min.css';
-        
-// import FroalaEditorComponent from 'react-froala-wysiwyg'
-
-
-const FroalaEditorComponent = dynamic(
-  () => import("react-froala-wysiwyg"),
-  { ssr: false }
-);
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
 
 interface FormData {
   title: string;
@@ -35,36 +23,54 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<FormData>();
 
   const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState("<p></p>");
+  const [initialContent, setInitialContent] = useState("<p></p>");
   const router = useRouter();
 
-  const config = {
-    placeholderText: "Write your blog content here...",
-    charCounterCount: false,
-    toolbarButtons: [
-      ["undo", "redo", "bold", "italic", "underline", "formatOL", "formatUL", "insertLink", "insertImage", "html"]
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Link.configure({
+        openOnClick: true,
+      }),
     ],
-  };
+    content: initialContent,
+    editorProps: {
+      attributes: {
+        class:
+          "min-h-[200px] border border-gray-300 rounded p-3 focus:outline-none prose",
+      },
+    },
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      setValue("content", html, { shouldValidate: true });
+    },
+  });
 
   const fetchBlog = async () => {
     if (!blogId) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!res.ok) throw new Error("Failed to fetch blog");
 
       const data = await res.json();
       setValue("title", data.title);
       setValue("content", data.content);
-      setContent(data.content);
+      setInitialContent(data.content);
+      editor?.commands.setContent(data.content);
     } catch (err) {
       alert("Could not load blog for editing");
       router.push("/blogs");
@@ -77,10 +83,10 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
 
     const blogPayload = {
       title: data.title.trim(),
-      content: content.trim(),
+      content: getValues("content").trim(),
     };
 
-    if (!blogPayload.content) {
+    if (!blogPayload.content || blogPayload.content === "<p></p>") {
       alert("Blog content cannot be empty.");
       return;
     }
@@ -133,23 +139,80 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
           )}
         </div>
 
-        <FroalaEditorComponent
-          tag='textarea'
-          model={content}
-          onModelChange={(value: string) => {
-            setContent(value);
-            setValue("content", value);
-          }}
-          config={config}
-        />
+        <div>
+          {editor && (
+            <div className="mb-3 space-x-2 border border-gray-300 p-2 rounded bg-gray-50 text-sm text-gray-700">
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBold().run()}
+              >
+                Bold
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleItalic().run()}
+              >
+                Italic
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleUnderline().run()}
+              >
+                Underline
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+              >
+                • List
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              >
+                1. List
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const url = prompt("Enter link URL");
+                  if (url) editor.chain().focus().setLink({ href: url }).run();
+                }}
+              >
+                Link
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().unsetLink().run()}
+              >
+                Remove Link
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              >
+                Code
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().setParagraph().run()}
+              >
+                Paragraph
+              </button>
+            </div>
+          )}
 
-        <input
-          type="hidden"
-          {...register("content", { required: "Content is required" })}
-        />
-        {errors.content && (
-          <p className="text-sm text-red-500">{errors.content.message}</p>
-        )}
+          <EditorContent editor={editor} />
+          <input
+            type="hidden"
+            {...register("content", { required: "Content is required" })}
+          />
+          {errors.content && (
+            <p className="text-sm text-red-500 mt-2">
+              {errors.content.message}
+            </p>
+          )}
+        </div>
 
         <Button type="submit" className="w-full bg-blue-600 text-white">
           {loading ? "Saving..." : blogId ? "Update Blog" : "Publish Blog"}

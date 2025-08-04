@@ -2,52 +2,18 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
 import { Button } from "./ui/button";
-
-interface DecodedToken {
-  id: string;
-  name: string;
-  email: string;
-  exp: number;
-}
+import { useAuth } from "@/context/AuthContext"; // 👈 AuthContext
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<DecodedToken | null>(null);
-  const [loading, setLoading] = useState(true); // ✨ loading state
+  const { isAuthenticated, user, logout } = useAuth(); // ✅ useAuth
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded: DecodedToken = jwtDecode(token);
-        if (decoded.exp * 1000 > Date.now()) {
-          setIsAuthenticated(true);
-          setUser(decoded);
-        } else {
-          localStorage.removeItem("token");
-        }
-      } catch {
-        localStorage.removeItem("token");
-      }
-    }
-    setLoading(false); // ✅ hydration complete
-  }, []);
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setIsAuthenticated(false);
-    setUser(null);
-    router.push("/auth/login");
-  };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
@@ -65,10 +31,6 @@ export default function Navbar() {
 
   // ❌ Don't render on auth pages
   if (pathname === "/auth/login" || pathname === "/auth/signup") return null;
-
-  // ✅ Wait until hydration completes
-  if (loading) return null;
-
 
   return (
     <nav className="w-full bg-gradient-to-r from-background to-accent/10 shadow-md sticky top-0 z-50 backdrop-blur-md">
@@ -142,6 +104,7 @@ export default function Navbar() {
                       onClick={() => {
                         logout();
                         setIsDropdownOpen(false);
+                        router.push("/auth/login");
                       }}
                     >
                       Logout
@@ -172,6 +135,7 @@ export default function Navbar() {
           )}
         </div>
       </div>
+
       {isMenuOpen && (
         <div className="md:hidden bg-background px-6 py-4 flex flex-col space-y-4">
           <Link
@@ -195,12 +159,8 @@ export default function Navbar() {
                 Create Blog
               </Link>
               <Link
-                href="/blogs/my-blogs"
-                className={`text-base font-medium px-3 py-2 rounded transition ${
-                  pathname === "/blogs/my-blogs"
-                    ? "gradient-text border-b-2 border-primary"
-                    : "text-text hover:text-primary hover:bg-primary/10"
-                }`}
+                href="/blogs/myblogs"
+                className="text-base font-medium px-3 py-2 rounded transition text-text hover:text-primary hover:bg-primary/10"
                 onClick={toggleMenu}
               >
                 My Blogs
@@ -218,6 +178,7 @@ export default function Navbar() {
                     onClick={() => {
                       logout();
                       toggleMenu();
+                      router.push("/auth/login");
                     }}
                   >
                     Logout
