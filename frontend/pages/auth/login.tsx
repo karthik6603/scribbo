@@ -36,8 +36,6 @@ export default function Login() {
 
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      if (!API_URL) throw new Error("Backend URL is not set.");
-
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -48,27 +46,32 @@ export default function Login() {
       });
 
       const contentType = response.headers.get("content-type");
-      const isJson = contentType?.includes("application/json");
-      const payload = isJson
-        ? await response.json()
-        : { message: await response.text() };
+      const isJson = contentType && contentType.includes("application/json");
+
+      if (!isJson) {
+        throw new Error("Expected JSON response from backend");
+      }
+
+      const payload = await response.json();
+
+      console.log("Payload from backend:", payload); // 👈 DEBUG LINE
 
       if (response.ok) {
-        const { token, user } = payload;
+        const token = payload.token;
+        if (!token) throw new Error("Token is undefined in payload");
+
         localStorage.setItem("token", token);
-        dispatch(loginSuccess({ token, user }));
+        dispatch(loginSuccess({ token }));
         setShowModal(true);
       } else {
         setError(payload.message || "Login failed. Please try again.");
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError("⚠️ Server might be waking up. Try again in a few seconds.");
-    } finally {
-      setIsSubmitting(false);
+      setError("Unexpected error. Try again later.");
     }
+    setIsSubmitting(false);
   };
-
   return (
     <>
       {/* 🔐 Login UI */}
