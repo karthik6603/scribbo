@@ -36,6 +36,7 @@ export default function Login() {
 
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      if (!API_URL) throw new Error("Backend URL is not set.");
 
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
@@ -47,25 +48,20 @@ export default function Login() {
       });
 
       const contentType = response.headers.get("content-type");
-      const isJson = contentType && contentType.includes("application/json");
-
-      const payload = isJson ? await response.json() : await response.text();
+      const isJson = contentType?.includes("application/json");
+      const payload = isJson ? await response.json() : { message: await response.text() };
 
       if (response.ok) {
-        const token = typeof payload === "string" ? payload : payload.token;
+        const token = payload.token || payload;
         localStorage.setItem("token", token);
         dispatch(loginSuccess({ token }));
         setShowModal(true);
       } else {
-        const errorMessage =
-          typeof payload === "string"
-            ? payload
-            : payload?.message || "Login failed.";
-        setError(errorMessage);
+        setError(payload.message || "Login failed. Please try again.");
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError("An unexpected error occurred. Please try again.");
+      setError("⚠️ Server might be waking up. Try again in a few seconds.");
     } finally {
       setIsSubmitting(false);
     }
@@ -73,18 +69,16 @@ export default function Login() {
 
   return (
     <>
-      {/* ✅ Login UI */}
+      {/* 🔐 Login UI */}
       <div className="bg-gradient-to-b from-background to-accent/10 min-h-screen flex items-center justify-center py-16 px-4">
         <div className="max-w-md w-full bg-white shadow-md rounded-xl p-8">
           <h2 className="text-3xl font-bold text-text mb-6 text-center">
             Log In to <span className="gradient-text">Scribbo</span>
           </h2>
           <Form.Root onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Email Field */}
+            {/* Email */}
             <Form.Field name="email" className="space-y-2">
-              <Form.Label className="block text-sm font-medium text-text">
-                Email
-              </Form.Label>
+              <Form.Label className="block text-sm font-medium text-text">Email</Form.Label>
               <Form.Control asChild>
                 <input
                   type="email"
@@ -98,25 +92,19 @@ export default function Login() {
                   className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
                     errors.email ? "border-red-500" : "border-border"
                   }`}
-                  aria-describedby={errors.email ? "email-error" : undefined}
                 />
               </Form.Control>
               {errors.email && (
-                <Form.Message
-                  className="text-sm text-red-500 flex items-center gap-1"
-                  id="email-error"
-                >
+                <Form.Message className="text-sm text-red-500 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />
                   {errors.email.message}
                 </Form.Message>
               )}
             </Form.Field>
 
-            {/* Password Field */}
+            {/* Password */}
             <Form.Field name="password" className="space-y-2">
-              <Form.Label className="block text-sm font-medium text-text">
-                Password
-              </Form.Label>
+              <Form.Label className="block text-sm font-medium text-text">Password</Form.Label>
               <Form.Control asChild>
                 <input
                   type="password"
@@ -130,29 +118,23 @@ export default function Login() {
                       value:
                         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
                       message:
-                        "Password must include uppercase, lowercase, number, and special character",
+                        "Must include uppercase, lowercase, number, and special character",
                     },
                   })}
                   className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
                     errors.password ? "border-red-500" : "border-border"
                   }`}
-                  aria-describedby={
-                    errors.password ? "password-error" : undefined
-                  }
                 />
               </Form.Control>
               {errors.password && (
-                <Form.Message
-                  className="text-sm text-red-500 flex items-center gap-1"
-                  id="password-error"
-                >
+                <Form.Message className="text-sm text-red-500 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />
                   {errors.password.message}
                 </Form.Message>
               )}
             </Form.Field>
 
-            {/* Error Message */}
+            {/* Error */}
             {error && (
               <div className="bg-red-50 text-red-600 p-2 rounded flex items-center gap-2">
                 <AlertCircle className="w-5 h-5" />
@@ -160,7 +142,7 @@ export default function Login() {
               </div>
             )}
 
-            {/* Submit Button */}
+            {/* Button */}
             <Form.Submit asChild>
               <Button
                 disabled={isSubmitting}
@@ -171,7 +153,7 @@ export default function Login() {
             </Form.Submit>
           </Form.Root>
 
-          {/* Signup Link */}
+          {/* Sign up CTA */}
           <p className="text-sm text-muted-foreground text-center mt-4">
             Don’t have an account?{" "}
             <Link
@@ -184,7 +166,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* ✅ Radix Modal on Successful Login */}
+      {/* ✅ Success Modal */}
       <Dialog.Root
         open={showModal}
         onOpenChange={(open) => {
