@@ -8,6 +8,17 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
+import {
+  Bold,
+  Italic,
+  Link as LinkIcon,
+  List,
+  ListOrdered,
+  Code,
+  FileText,
+  Underline as UnderlineIcon,
+  Unlink,
+} from "lucide-react";
 
 interface FormData {
   title: string;
@@ -32,18 +43,12 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
   const router = useRouter();
 
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link.configure({
-        openOnClick: true,
-      }),
-    ],
+    extensions: [StarterKit, Underline, Link.configure({ openOnClick: true })],
     content: initialContent,
     editorProps: {
       attributes: {
         class:
-          "min-h-[200px] border border-gray-300 rounded p-3 focus:outline-none prose",
+          "min-h-[200px] prose focus:outline-none p-4 bg-white rounded-md border border-gray-300 shadow-sm",
       },
     },
     onUpdate: ({ editor }) => {
@@ -59,9 +64,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       if (!res.ok) throw new Error("Failed to fetch blog");
@@ -121,87 +124,99 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
   }, [blogId]);
 
   return (
-    <div className="max-w-3xl mx-auto p-6 mt-10 bg-white shadow rounded-xl">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        {blogId ? "Edit Blog" : "Create New Blog"}
+    <div className="max-w-3xl mx-auto mt-12 bg-white p-8 rounded-2xl shadow-lg">
+      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
+        {blogId ? "Edit Your Blog ✍️" : "Create a New Blog 📝"}
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Title Input */}
         <div>
           <input
             type="text"
-            placeholder="Enter blog title"
+            placeholder="Enter your blog title"
             {...register("title", { required: "Title is required" })}
-            className="w-full px-4 py-2 border border-gray-300 rounded"
+            className="w-full px-5 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 outline-none"
           />
           {errors.title && (
             <p className="text-sm text-red-500 mt-1">{errors.title.message}</p>
           )}
         </div>
 
-        <div>
-          {editor && (
-            <div className="mb-3 space-x-2 border border-gray-300 p-2 rounded bg-gray-50 text-sm text-gray-700">
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleBold().run()}
-              >
-                Bold
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-              >
-                Italic
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleUnderline().run()}
-              >
-                Underline
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-              >
-                • List
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
-              >
-                1. List
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const url = prompt("Enter link URL");
-                  if (url) editor.chain().focus().setLink({ href: url }).run();
-                }}
-              >
-                Link
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().unsetLink().run()}
-              >
-                Remove Link
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-              >
-                Code
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().setParagraph().run()}
-              >
-                Paragraph
-              </button>
-            </div>
-          )}
+        {/* Editor Toolbar */}
+        {editor && (
+          <div className="flex flex-wrap gap-3 border border-gray-200 p-3 rounded-md bg-gray-50 items-center">
+            <button
+              type="button"
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              title="Bold"
+            >
+              <Bold className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+            <button
+              type="button"
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              title="Italic"
+            >
+              <Italic className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+            <button
+              type="button"
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+              title="Underline"
+            >
+              <UnderlineIcon className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+            <button
+              type="button"
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+              title="Bullet List"
+            >
+              <List className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+            <button
+              type="button"
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              title="Numbered List"
+            >
+              <ListOrdered className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const url = prompt("Enter URL");
+                if (url) editor.chain().focus().setLink({ href: url }).run();
+              }}
+              title="Insert Link"
+            >
+              <LinkIcon className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+            <button
+              type="button"
+              onClick={() => editor.chain().focus().unsetLink().run()}
+              title="Remove Link"
+            >
+              <Unlink className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+            <button
+              type="button"
+              onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              title="Code Block"
+            >
+              <Code className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+            <button
+              type="button"
+              onClick={() => editor.chain().focus().setParagraph().run()}
+              title="Paragraph"
+            >
+              <FileText className="w-5 h-5 text-gray-600 hover:text-black" />
+            </button>
+          </div>
+        )}
 
+        {/* Blog Content Editor */}
+        <div>
           <EditorContent editor={editor} />
           <input
             type="hidden"
@@ -214,7 +229,12 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
           )}
         </div>
 
-        <Button type="submit" className="w-full bg-blue-600 text-white">
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold rounded-lg transition-all duration-300"
+        >
           {loading ? "Saving..." : blogId ? "Update Blog" : "Publish Blog"}
         </Button>
       </form>
