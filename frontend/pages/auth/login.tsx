@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import * as Form from "@radix-ui/react-form";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, CheckCircle } from "lucide-react";
-import { AuthContext, useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 
 interface LoginForm {
   email: string;
@@ -46,10 +46,7 @@ export default function Login() {
 
       const contentType = response.headers.get("content-type");
       const isJson = contentType && contentType.includes("application/json");
-
-      if (!isJson) {
-        throw new Error("Expected JSON response from backend");
-      }
+      if (!isJson) throw new Error("Expected JSON response from backend");
 
       const payload = await response.json();
 
@@ -57,8 +54,8 @@ export default function Login() {
         const token = payload.token;
         if (!token) throw new Error("Token is undefined in payload");
 
-        login(token); // ⬅️ Update context, sets token in localStorage too
-        setShowModal(true); // show success modal
+        login(token);
+        setShowModal(true);
       } else {
         setError(payload.message || "Login failed. Please try again.");
       }
@@ -66,19 +63,20 @@ export default function Login() {
       console.error("Login error:", err);
       setError("Unexpected error. Try again later.");
     }
+
     setIsSubmitting(false);
   };
 
   return (
     <>
-      {/* 🔐 Login UI */}
       <div className="bg-gradient-to-b from-background to-accent/10 min-h-screen flex items-center justify-center py-16 px-4">
-        <div className="max-w-md w-full bg-white shadow-md rounded-xl p-8">
+        <div className="max-w-md w-full bg-white dark:bg-zinc-900 shadow-md rounded-xl p-8">
           <h2 className="text-3xl font-bold text-text mb-6 text-center">
             Log In to <span className="gradient-text">Scribbo</span>
           </h2>
+
           <Form.Root onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Email */}
+            {/* Email Field */}
             <Form.Field name="email" className="space-y-2">
               <Form.Label className="block text-sm font-medium text-text">
                 Email
@@ -86,6 +84,7 @@ export default function Login() {
               <Form.Control asChild>
                 <input
                   type="email"
+                  placeholder="you@example.com"
                   {...register("email", {
                     required: "Email is required",
                     pattern: {
@@ -93,7 +92,7 @@ export default function Login() {
                       message: "Invalid email format",
                     },
                   })}
-                  className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
+                  className={`w-full px-4 py-2 border rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-primary ${
                     errors.email ? "border-red-500" : "border-border"
                   }`}
                 />
@@ -106,7 +105,7 @@ export default function Login() {
               )}
             </Form.Field>
 
-            {/* Password */}
+            {/* Password Field */}
             <Form.Field name="password" className="space-y-2">
               <Form.Label className="block text-sm font-medium text-text">
                 Password
@@ -114,6 +113,7 @@ export default function Login() {
               <Form.Control asChild>
                 <input
                   type="password"
+                  placeholder="••••••••"
                   {...register("password", {
                     required: "Password is required",
                     minLength: {
@@ -122,12 +122,12 @@ export default function Login() {
                     },
                     pattern: {
                       value:
-                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
                       message:
-                        "Must include uppercase, lowercase, number, and special character",
+                        "Include uppercase, lowercase, number, and special character",
                     },
                   })}
-                  className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
+                  className={`w-full px-4 py-2 border rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-primary ${
                     errors.password ? "border-red-500" : "border-border"
                   }`}
                 />
@@ -140,7 +140,7 @@ export default function Login() {
               )}
             </Form.Field>
 
-            {/* Error */}
+            {/* Error Display */}
             {error && (
               <div className="bg-red-50 text-red-600 p-2 rounded flex items-center gap-2">
                 <AlertCircle className="w-5 h-5" />
@@ -148,7 +148,7 @@ export default function Login() {
               </div>
             )}
 
-            {/* Button */}
+            {/* Submit */}
             <Form.Submit asChild>
               <Button
                 disabled={isSubmitting}
@@ -159,12 +159,12 @@ export default function Login() {
             </Form.Submit>
           </Form.Root>
 
-          {/* Sign up CTA */}
+          {/* Sign Up CTA */}
           <p className="text-sm text-muted-foreground text-center mt-4">
             Don’t have an account?{" "}
             <Link
               href="/auth/signup"
-              className="text-text hover:text-primary hover:bg-primary/10 rounded px-1 transition"
+              className="text-text hover:text-primary hover:bg-primary/10 rounded px-1 transition-colors"
             >
               Sign Up
             </Link>
@@ -172,7 +172,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* ✅ Success Modal */}
+      {/* Success Modal */}
       <Dialog.Root
         open={showModal}
         onOpenChange={(open) => {
@@ -208,8 +208,4 @@ export default function Login() {
   );
 }
 
-export const getServerSideProps = () => {
-  return {
-    props: {},
-  };
-};
+export const getServerSideProps = () => ({ props: {} });

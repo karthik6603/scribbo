@@ -1,3 +1,5 @@
+// app/layout.tsx
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
@@ -20,19 +22,33 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Scribbo",
     description: "A platform for sharing and discovering stories",
-    url: "",
+    url: "https://scribbo.vercel.app", // 🔗 Add actual URL here
     siteName: "Scribbo",
     type: "website",
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" className="scroll-smooth">
+      <body
+        className={`
+          ${geistSans.variable} 
+          ${geistMono.variable} 
+          bg-[#f9fafb] 
+          text-gray-900 
+          antialiased 
+          min-h-screen 
+          flex flex-col
+        `}
+      >
         <AuthProvider>
           <Navbar />
-          {children}
+          <main className="flex-1 px-4 md:px-8 py-4">{children}</main>
         </AuthProvider>
       </body>
     </html>

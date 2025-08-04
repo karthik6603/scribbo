@@ -60,7 +60,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
     editorProps: {
       attributes: {
         class:
-          "min-h-[200px] prose focus:outline-none p-4 bg-white rounded-md border border-gray-300 shadow-sm",
+          "min-h-[200px] prose focus:outline-none p-4 bg-background rounded-xl border border-border shadow-sm transition-all duration-200 ease-in-out",
       },
     },
     onUpdate: ({ editor }) => {
@@ -136,8 +136,8 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
   const isActive = (type: string) => editor?.isActive(type);
 
   return (
-    <div className="max-w-3xl mx-auto mt-12 bg-white p-8 rounded-2xl shadow-lg">
-      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
+    <div className="max-w-3xl mx-auto mt-12 bg-white dark:bg-zinc-900 p-6 md:p-10 rounded-3xl shadow-xl transition-all duration-300">
+      <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-800 dark:text-white animate-fade-in">
         {blogId ? "Edit Your Blog ✍️" : "Create a New Blog 📝"}
       </h2>
 
@@ -145,9 +145,9 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
         <div>
           <input
             type="text"
-            placeholder="Enter your blog title"
+            placeholder="Blog Title"
             {...register("title", { required: "Title is required" })}
-            className="w-full px-5 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            className="w-full px-5 py-3 text-lg rounded-xl border border-gray-300 dark:border-zinc-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all duration-200"
           />
           {errors.title && (
             <p className="text-sm text-red-500 mt-1">{errors.title.message}</p>
@@ -155,62 +155,40 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
         </div>
 
         {editor && (
-          <div className="flex flex-wrap gap-3 border border-gray-200 p-3 rounded-md bg-gray-50 items-center">
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleBold().run()}
-              title="Bold"
-            >
-              <Bold
-                className={`w-5 h-5 ${
-                  isActive("bold") ? "text-black" : "text-gray-600"
-                }`}
-              />
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleItalic().run()}
-              title="Italic"
-            >
-              <Italic
-                className={`w-5 h-5 ${
-                  isActive("italic") ? "text-black" : "text-gray-600"
-                }`}
-              />
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleUnderline().run()}
-              title="Underline"
-            >
-              <UnderlineIcon
-                className={`w-5 h-5 ${
-                  isActive("underline") ? "text-black" : "text-gray-600"
-                }`}
-              />
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleBulletList().run()}
-              title="Bullet List"
-            >
-              <List
-                className={`w-5 h-5 ${
-                  isActive("bulletList") ? "text-black" : "text-gray-600"
-                }`}
-              />
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleOrderedList().run()}
-              title="Numbered List"
-            >
-              <ListOrdered
-                className={`w-5 h-5 ${
-                  isActive("orderedList") ? "text-black" : "text-gray-600"
-                }`}
-              />
-            </button>
+          <div className="flex flex-wrap gap-3 border border-gray-200 dark:border-zinc-700 p-3 rounded-lg bg-gray-50 dark:bg-zinc-800 transition-all duration-200">
+            {[
+              { icon: Bold, action: "bold" },
+              { icon: Italic, action: "italic" },
+              { icon: UnderlineIcon, action: "underline" },
+              { icon: List, action: "bulletList" },
+              { icon: ListOrdered, action: "orderedList" },
+              { icon: Code, action: "codeBlock" },
+              { icon: FileText, action: "paragraph" },
+            ].map(({ icon: Icon, action }, i) => {
+              const commandKey = `toggle${
+                action.charAt(0).toUpperCase() + action.slice(1)
+              }`;
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() =>
+                    (editor.chain().focus() as any)[commandKey]?.().run()
+                  }
+                  title={action}
+                  className="mx-1 p-2 rounded-md bg-gray-800 hover:bg-gray-700 text-white transition-colors"
+                >
+                  <Icon
+                    className={`w-5 h-5 transition-all duration-150 ${
+                      isActive(action)
+                        ? "text-black dark:text-white"
+                        : "text-gray-600 dark:text-zinc-400"
+                    }`}
+                  />
+                </button>
+              );
+            })}
+
             <button
               type="button"
               onClick={() => {
@@ -219,36 +197,15 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
               }}
               title="Insert Link"
             >
-              <LinkIcon className="w-5 h-5 text-gray-600 hover:text-black" />
+              <LinkIcon className="w-5 h-5 text-gray-600 hover:text-black dark:hover:text-white" />
             </button>
+
             <button
               type="button"
               onClick={() => editor.chain().focus().unsetLink().run()}
               title="Remove Link"
             >
-              <Unlink className="w-5 h-5 text-gray-600 hover:text-black" />
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-              title="Code Block"
-            >
-              <Code
-                className={`w-5 h-5 ${
-                  isActive("codeBlock") ? "text-black" : "text-gray-600"
-                }`}
-              />
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().setParagraph().run()}
-              title="Paragraph"
-            >
-              <FileText
-                className={`w-5 h-5 ${
-                  isActive("paragraph") ? "text-black" : "text-gray-600"
-                }`}
-              />
+              <Unlink className="w-5 h-5 text-gray-600 hover:text-black dark:hover:text-white" />
             </button>
           </div>
         )}
@@ -269,7 +226,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold rounded-lg transition-all duration-300"
+          className="w-full text-lg font-semibold py-3 rounded-xl bg-primary text-white hover:bg-cta shadow-lg hover:shadow-xl transition-all duration-300"
         >
           {loading ? "Saving..." : blogId ? "Update Blog" : "Publish Blog"}
         </Button>

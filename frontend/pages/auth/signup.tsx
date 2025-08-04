@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"; // You need this
+} from "@/components/ui/dialog";
 
 interface SignupForm {
   name: string;
@@ -38,8 +38,7 @@ export default function Signup() {
     setIsSubmitting(true);
     setError(null);
     try {
-      const API_URL =
-        process.env.NEXT_PUBLIC_API_URL || "${process.env.NEXT_PUBLIC_API_URL}";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -55,7 +54,7 @@ export default function Signup() {
         setTimeout(() => {
           setShowSuccessModal(false);
           router.push("/auth/login");
-        }, 2000); // Wait 2s then redirect
+        }, 2000);
       } else {
         const errorData = await response.json();
         setError(errorData.message || "Signup failed");
@@ -69,12 +68,12 @@ export default function Signup() {
 
   return (
     <>
-      {/* SIGN UP FORM */}
-      <div className="bg-gradient-to-b from-background to-accent/10 min-h-screen flex items-center justify-center py-16 px-4">
-        <div className="max-w-md w-full bg-white shadow-md rounded-xl p-8">
+      <div className="bg-gradient-to-b from-background to-accent/10 min-h-screen flex items-center justify-center px-4 py-16">
+        <div className="max-w-md w-full bg-white dark:bg-zinc-900 shadow-lg rounded-xl p-8">
           <h2 className="text-3xl font-bold text-text mb-6 text-center">
             Sign Up for <span className="gradient-text">Scribbo</span>
           </h2>
+
           <Form.Root onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Name */}
             <Form.Field name="name" className="space-y-2">
@@ -87,10 +86,10 @@ export default function Signup() {
                     maxLength: { value: 50, message: "Max 50 characters" },
                     pattern: {
                       value: /^[A-Za-z\s]+$/,
-                      message: "Only letters and spaces",
+                      message: "Only letters and spaces allowed",
                     },
                   })}
-                  className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
+                  className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-150 ${
                     errors.name ? "border-red-500" : "border-border"
                   }`}
                 />
@@ -116,7 +115,7 @@ export default function Signup() {
                       message: "Invalid email format",
                     },
                   })}
-                  className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
+                  className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-150 ${
                     errors.email ? "border-red-500" : "border-border"
                   }`}
                 />
@@ -145,7 +144,7 @@ export default function Signup() {
                         "Use uppercase, lowercase, number, and special char",
                     },
                   })}
-                  className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${
+                  className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-150 ${
                     errors.password ? "border-red-500" : "border-border"
                   }`}
                 />
@@ -160,16 +159,17 @@ export default function Signup() {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 text-red-600 p-2 rounded flex items-center gap-2">
+              <div className="bg-red-100 text-red-600 p-3 rounded-xl flex items-center gap-2 text-sm shadow-sm">
                 <AlertCircle className="w-5 h-5" />
-                <p className="text-sm">{error}</p>
+                {error}
               </div>
             )}
 
+            {/* Submit CTA */}
             <Form.Submit asChild>
               <Button
                 disabled={isSubmitting}
-                className="w-full text-lg px-8 py-3 bg-primary text-white rounded-xl hover:bg-cta hover:scale-105 transition-all"
+                className="w-full text-lg px-8 py-3 bg-primary text-white border-none hover:bg-cta hover:text-text shadow-md hover:shadow-lg hover:scale-105 transition-all rounded-xl"
               >
                 {isSubmitting ? "Signing Up..." : "Sign Up"}
               </Button>
@@ -190,9 +190,9 @@ export default function Signup() {
 
       {/* SUCCESS MODAL */}
       <Dialog open={showSuccessModal}>
-        <DialogContent className="max-w-sm text-center">
+        <DialogContent className="max-w-sm text-center bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-xl">
           <DialogHeader>
-            <DialogTitle className="text-green-600 flex items-center justify-center gap-2">
+            <DialogTitle className="text-green-600 flex items-center justify-center gap-2 text-lg font-semibold">
               <CheckCircle2 className="w-6 h-6" />
               Account Created Successfully!
             </DialogTitle>

@@ -3,10 +3,18 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+type Blog = {
+  title: string;
+  content: string;
+  author: {
+    email: string;
+  };
+};
+
 export default function BlogDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const [blog, setBlog] = useState<unknown>(null);
+  const [blog, setBlog] = useState<Blog | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -20,17 +28,9 @@ export default function BlogDetail() {
           },
         });
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
 
-        const text = await res.text();
-
-        if (!text) {
-          throw new Error("Empty response from server");
-        }
-
-        const data = JSON.parse(text);
+        const data = await res.json();
         setBlog(data);
       } catch (err) {
         console.error("Error fetching blog:", err);
@@ -40,13 +40,23 @@ export default function BlogDetail() {
     fetchBlog();
   }, [id]);
 
-  if (!blog) return <p>Loading...</p>;
+  if (!blog) {
+    return (
+      <div className="flex items-center justify-center min-h-[40vh]">
+        <p className="text-gray-600 text-lg font-medium">Loading blog details...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-2">{(blog as any).title}</h1>
-      <p className="text-sm text-gray-500 mb-4">By {(blog as any).author.email}</p>
-      <div dangerouslySetInnerHTML={{ __html: (blog as any).content }} />
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-4xl font-extrabold mb-4 text-primary-foreground">{blog.title}</h1>
+      <p className="text-sm text-muted-foreground mb-6">By {blog.author.email}</p>
+
+      <div
+        className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none text-gray-800"
+        dangerouslySetInnerHTML={{ __html: blog.content }}
+      />
     </div>
   );
 }

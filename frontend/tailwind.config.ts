@@ -1,10 +1,7 @@
 import { type Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -23,6 +20,20 @@ const config: Config = {
       backgroundImage: {
         "gradient-to-r-primary": "linear-gradient(to right, #1E3A8A, #22D3EE)",
         "gradient-to-b": "linear-gradient(to bottom, #F9FAFB, #22D3EE14)",
+      },
+      animation: {
+        "fade-in": "fadeIn 0.3s ease-out",
+        "slide-down": "slideDown 0.3s ease-out",
+      },
+      keyframes: {
+        fadeIn: {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+        slideDown: {
+          from: { opacity: 0, transform: "translateY(-0.5rem)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
       },
     },
   },

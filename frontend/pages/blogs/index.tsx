@@ -22,15 +22,15 @@ export default function BlogList() {
 
   useEffect(() => {
     const fetchBlogs = async () => {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/blogs?page=${page + 1}&limit=${pageSize}`
         );
         if (!res.ok) throw new Error("Failed to fetch blogs");
         const data = await res.json();
 
-        setBlogs(data.content); // If you're returning Page<Blog> directly
+        setBlogs(data.content || []);
         setTotalPages(data.totalPages ?? 1);
       } catch (err) {
         console.error("Error fetching blogs:", err);
@@ -51,16 +51,14 @@ export default function BlogList() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-background to-accent/10 py-16 px-4">
+    <section className="bg-gradient-to-b from-background to-accent/10 py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-text mb-8 text-center gradient-text">
+        <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center gradient-text">
           Explore Stories
         </h2>
 
         {isLoading ? (
-          <p className="text-lg text-muted-foreground text-center">
-            Loading...
-          </p>
+          <p className="text-lg text-muted-foreground text-center">Loading...</p>
         ) : blogs.length === 0 ? (
           <p className="text-lg text-muted-foreground text-center">
             No stories found.{" "}
@@ -74,26 +72,25 @@ export default function BlogList() {
               {blogs.map((blog) => (
                 <div
                   key={blog.id}
-                  className="p-6 bg-white shadow-md rounded-xl"
+                  className="p-6 bg-white shadow-lg hover:shadow-xl border border-border rounded-2xl transition-all"
                 >
-                  <h3 className="text-xl font-semibold text-primary mb-2">
+                  <h3 className="text-2xl font-semibold text-text mb-2">
                     {blog.title}
                   </h3>
                   <p
-                    className="text-base text-muted-foreground mb-4 line-clamp-3"
+                    className="text-sm text-muted-foreground mb-3 line-clamp-3"
                     dangerouslySetInnerHTML={{ __html: blog.content }}
                   ></p>
-
-                  <p className="text-sm text-muted-foreground mb-4">
-                    By {blog.author.email} on{" "}
+                  <p className="text-xs text-gray-500 mb-4">
+                    By <span className="font-medium">{blog.author.email}</span> on{" "}
                     {new Date(blog.createdAt).toLocaleDateString()}
                   </p>
                   <Button
                     asChild
-                    className="text-base px-6 py-2 bg-primary text-white border-none hover:bg-cta hover:text-text shadow-md hover:shadow-lg hover:scale-105 transition-all rounded-xl"
+                    className="px-4 py-2 bg-primary text-white rounded-xl hover:bg-cta hover:scale-105 flex items-center gap-2 transition-all"
                   >
                     <Link href={`/blogs/${blog.id}`}>
-                      <BookOpen className="w-5 h-5 mr-2" />
+                      <BookOpen className="w-4 h-4" />
                       Read More
                     </Link>
                   </Button>
@@ -102,8 +99,8 @@ export default function BlogList() {
             </div>
 
             {/* Pagination */}
-            <div className="flex flex-col items-center mt-10 space-y-4">
-              <p className="text-muted-foreground text-sm">
+            <div className="flex flex-col items-center mt-10 space-y-3">
+              <p className="text-sm text-muted-foreground">
                 Page {page + 1} of {totalPages}
               </p>
               <div className="flex gap-2 flex-wrap justify-center">
@@ -137,6 +134,6 @@ export default function BlogList() {
           </>
         )}
       </div>
-    </div>
+    </section>
   );
 }

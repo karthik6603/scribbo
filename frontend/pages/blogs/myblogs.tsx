@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface Author {
   id: string;
@@ -15,7 +16,7 @@ interface Blog {
   title: string;
   content: string;
   author: Author;
-  createdAt: string; // CamelCase to match backend Java field
+  createdAt: string;
 }
 
 export default function MyBlogsPage() {
@@ -26,19 +27,13 @@ export default function MyBlogsPage() {
 
   const fetchBlogs = async (page: number) => {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.error("No auth token found");
-      return;
-    }
+    if (!token) return console.error("No auth token found");
 
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/blogs/myblogs?page=${page}&limit=10`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -47,8 +42,6 @@ export default function MyBlogsPage() {
       }
 
       const data = await response.json();
-      console.log("Fetched blogs:", data);
-
       setBlogs(data.blogs);
       setCurrentPage(data.currentPage);
       setTotalPages(data.totalPages);
@@ -59,25 +52,18 @@ export default function MyBlogsPage() {
 
   const handleDelete = async (id: string) => {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.error("No auth token found");
-      return;
-    }
+    if (!token) return console.error("No auth token found");
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!response.ok) {
         throw new Error(`Delete failed with status ${response.status}`);
       }
 
-      // Refresh blog list after deletion
       fetchBlogs(currentPage);
     } catch (error: unknown) {
       console.error("Error deleting blog:", (error as Error).message, error);
@@ -89,62 +75,99 @@ export default function MyBlogsPage() {
   }, [currentPage]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">My Blogs</h1>
+    <section className="bg-gradient-to-b from-background to-accent/10 py-16 px-4 min-h-screen">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-10 gradient-text">
+          My Stories
+        </h1>
 
-      {blogs.length === 0 ? (
-        <p>No blogs found.</p>
-      ) : (
-        blogs.map((blog) => (
-          <div key={blog.id} className="border rounded-md p-4 mb-4 shadow-sm">
-            <Link
-              href={`/blogs/${blog.id}`}
-              className="text-xl font-semibold hover:underline"
-            >
-              {blog.title}
-            </Link>
-            <p className="text-sm text-gray-500 mt-1">By {blog.author.email}</p>
-            <p
-              className="mt-2 line-clamp-3"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
-            ></p>
+        {blogs.length === 0 ? (
+          <p className="text-muted-foreground text-center text-lg">No blogs found.</p>
+        ) : (
+          <div className="grid gap-6">
+            {blogs.map((blog) => (
+              <div
+                key={blog.id}
+                className="p-6 bg-white shadow-md hover:shadow-lg border border-border rounded-2xl transition-all"
+              >
+                <Link
+                  href={`/blogs/${blog.id}`}
+                  className="text-xl font-semibold text-primary hover:underline"
+                >
+                  {blog.title}
+                </Link>
+                <p className="text-sm text-muted-foreground mt-1">
+                  By {blog.author.email}
+                </p>
+                <p
+                  className="text-sm text-muted-foreground mt-2 mb-4 line-clamp-3"
+                  dangerouslySetInnerHTML={{ __html: blog.content }}
+                ></p>
 
-            <div className="mt-4 flex space-x-2">
-              <Link href={`/blogs/edit/${blog.id}`}>Edit</Link>
+                <div className="flex gap-2">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="rounded-xl px-3 py-2 text-sm hover:bg-muted"
+                  >
+                    <Link href={`/blogs/edit/${blog.id}`}>
+                      <Pencil className="w-4 h-4 mr-1" />
+                      Edit
+                    </Link>
+                  </Button>
+
+                  <Button
+                    variant="destructive"
+                    className="rounded-xl px-3 py-2 text-sm"
+                    onClick={() => handleDelete(blog.id)}
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex flex-col items-center mt-10 space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages}
+            </p>
+            <div className="flex gap-2 flex-wrap justify-center">
+              <Button
+                variant="outline"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              >
+                Previous
+              </Button>
+
+              {Array.from({ length: totalPages }, (_, i) => (
+                <Button
+                  key={i}
+                  variant={currentPage === i + 1 ? "default" : "outline"}
+                  onClick={() => setCurrentPage(i + 1)}
+                >
+                  {i + 1}
+                </Button>
+              ))}
 
               <Button
-                variant="destructive"
-                onClick={() => handleDelete(blog.id)}
+                variant="outline"
+                disabled={currentPage === totalPages}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
               >
-                Delete
+                Next
               </Button>
             </div>
           </div>
-        ))
-      )}
-
-      {/* Pagination */}
-      <div className="flex justify-center mt-6 space-x-4">
-        <Button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          variant="outline"
-        >
-          Prev
-        </Button>
-        <span className="self-center text-sm">
-          Page {currentPage} of {totalPages}
-        </span>
-        <Button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          variant="outline"
-        >
-          Next
-        </Button>
+        )}
       </div>
-    </div>
+    </section>
   );
 }
