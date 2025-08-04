@@ -109,7 +109,7 @@ const BlogForm: FC<BlogFormProps> = ({ blogId }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:8080/blogs${blogId ? `/${blogId}` : ""}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/blogs${blogId ? `/${blogId}` : ""}`,
         {
           method: blogId ? "PUT" : "POST",
           headers: {
