@@ -75,7 +75,7 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg p-4 space-y-2 z-50">
                     <div className="space-y-1">
                       <p className="text-sm font-semibold text-gray-800">{user.name}</p>
-                      <p className="text-sm text-gray-500">{user.name}</p>
+                      <p className="text-sm text-gray-500">{user.email}</p>
                     </div>
                     <Button
                       variant="destructive"

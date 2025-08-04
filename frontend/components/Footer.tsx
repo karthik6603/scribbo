@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-zinc-950 via-zinc-800 to-zinc-700 border-t border-zinc-700 py-12 text-center text-sm text-zinc-300">
+    <footer className="bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-850 border-t border-zinc-700 py-12 text-center text-sm text-zinc-300">
       <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
         <p className="text-zinc-500">
           © {new Date().getFullYear()}{" "}
