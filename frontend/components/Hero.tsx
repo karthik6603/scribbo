@@ -4,25 +4,24 @@ import { PenTool, BookOpen, Users, Sparkles } from "lucide-react";
 
 export function Hero() {
   return (
-    <div className="bg-gradient-to-b from-zinc-950 to-zinc-900 text-white">
+    <div className="bg-white text-zinc-900">
       {/* Hero Banner */}
-      <section className="relative pb-24 px-4">
-        <div className="absolute inset-0 blur-3xl opacity-10 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl" />
-        <div className="relative max-w-4xl mx-auto text-center z-10">
+      <section className="w-full py-24 px-4">
+        <div className="max-w-5xl mx-auto text-center">
           <div className="flex justify-center mb-6">
-            <div className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium shadow-sm">
+            <div className="flex items-center gap-2 bg-zinc-100 text-cyan-600 px-4 py-2 rounded-full text-sm font-medium shadow">
               <Sparkles className="w-4 h-4 animate-pulse" />
-              Welcome to <span className="font-bold gradient-text">Scribbo</span>
+              Welcome to <span className="font-bold text-cyan-500">Scribbo</span>
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-            Share Your <span className="gradient-text">Stories</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
+            Share Your <span className="text-cyan-500">Stories</span>
             <br />
             With The World
           </h1>
 
-          <p className="text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-zinc-600 mb-10 max-w-2xl mx-auto leading-relaxed">
             A modern platform where writers connect, share ideas, and inspire one another.
             Create beautiful stories, discover unique voices, and join a global community.
           </p>
@@ -32,7 +31,7 @@ export function Hero() {
             <Button
               size="lg"
               asChild
-              className="text-lg px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-blue-500 hover:to-cyan-500 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out rounded-xl"
+              className="text-lg px-8 py-3 bg-black text-white hover:bg-zinc-800 shadow-md transition-all rounded-xl"
             >
               <Link href="/auth/signup">
                 <PenTool className="w-5 h-5 mr-2" />
@@ -43,7 +42,7 @@ export function Hero() {
             <Button
               size="lg"
               asChild
-              className="text-lg px-8 py-3 bg-zinc-800 hover:bg-zinc-700 text-white shadow-md hover:shadow-lg transition-all duration-300 ease-in-out rounded-xl"
+              className="text-lg px-8 py-3 border border-zinc-300 text-zinc-700 hover:bg-zinc-100 transition-all rounded-xl"
             >
               <Link href="/blogs">
                 <BookOpen className="w-5 h-5 mr-2" />
@@ -71,12 +70,12 @@ export function Hero() {
                 text: "Find amazing stories across all topics.",
               },
             ].map(({ icon: Icon, title, text }, i) => (
-              <div key={i} className="text-center hover:scale-[1.02] transition-all duration-200">
-                <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                  <Icon className="w-6 h-6 text-primary" />
+              <div key={i} className="text-center hover:scale-[1.02] transition-transform">
+                <div className="bg-cyan-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Icon className="w-6 h-6 text-cyan-600" />
                 </div>
-                <h3 className="font-semibold mb-2 text-base text-white">{title}</h3>
-                <p className="text-sm text-zinc-400">{text}</p>
+                <h3 className="font-semibold mb-2 text-base">{title}</h3>
+                <p className="text-sm text-zinc-500">{text}</p>
               </div>
             ))}
           </div>
@@ -84,9 +83,9 @@ export function Hero() {
       </section>
 
       {/* Why Scribbo Section */}
-      <section className="py-16 px-4 bg-zinc-900 border-t border-zinc-800">
+      <section className="py-16 px-4 border-t border-zinc-200 bg-zinc-50">
         <div className="max-w-6xl mx-auto text-center space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold gradient-text">Why Scribbo?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-cyan-600">Why Scribbo?</h2>
           <div className="grid md:grid-cols-3 gap-6 text-left">
             {[
               {
@@ -104,12 +103,12 @@ export function Hero() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="p-6 bg-zinc-800 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                className="p-6 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-shadow"
               >
-                <h3 className="text-lg md:text-xl font-semibold mb-2 text-cyan-400">
+                <h3 className="text-lg md:text-xl font-semibold mb-2 text-cyan-600">
                   {item.title}
                 </h3>
-                <p className="text-sm text-zinc-400">{item.desc}</p>
+                <p className="text-sm text-zinc-500">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -117,9 +116,9 @@ export function Hero() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 px-4 bg-zinc-950 border-t border-zinc-800">
+      <section className="py-16 px-4 bg-white border-t border-zinc-200">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">What Writers Say</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-zinc-800">What Writers Say</h2>
           <div className="grid md:grid-cols-2 gap-6 text-left">
             {[
               {
@@ -133,10 +132,10 @@ export function Hero() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="p-6 rounded-xl bg-zinc-900 shadow-md hover:shadow-lg transition-shadow"
+                className="p-6 rounded-xl bg-zinc-50 border border-zinc-200 shadow-sm hover:shadow-md transition-shadow"
               >
-                <p className="text-lg md:text-xl mb-2 italic text-white">“{item.quote}”</p>
-                <p className="text-base font-semibold text-cyan-400">— {item.name}</p>
+                <p className="text-lg md:text-xl mb-2 italic text-zinc-700">“{item.quote}”</p>
+                <p className="text-base font-semibold text-cyan-600">— {item.name}</p>
               </div>
             ))}
           </div>
@@ -144,16 +143,16 @@ export function Hero() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 text-white text-center">
+      <section className="py-20 bg-zinc-100 text-center">
         <div className="max-w-2xl mx-auto space-y-6">
-          <h2 className="text-3xl md:text-4xl font-bold">Ready to share your voice?</h2>
-          <p className="text-lg md:text-xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-zinc-900">Ready to share your voice?</h2>
+          <p className="text-lg md:text-xl text-zinc-600">
             Join the community and publish your first story today. It’s free!
           </p>
           <Button
             size="lg"
             asChild
-            className="text-lg px-8 py-3 bg-white text-black font-semibold border-none hover:bg-zinc-200 shadow-lg hover:shadow-xl hover:scale-105 transition-all rounded-xl"
+            className="text-lg px-8 py-3 bg-black text-white font-semibold hover:bg-zinc-800 transition rounded-xl"
           >
             <Link href="/auth/signup">Join Now</Link>
           </Button>
