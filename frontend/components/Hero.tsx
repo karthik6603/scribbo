@@ -17,7 +17,7 @@ export function Hero() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
-            Share Your <span className="text-cyan-500">Stories</span>
+            Share Your <span className="gradient-text">Stories</span>
             <br />
             With The World
           </h1>
