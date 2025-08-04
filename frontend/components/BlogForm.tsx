@@ -160,8 +160,6 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
               { icon: Bold, action: "bold" },
               { icon: Italic, action: "italic" },
               { icon: UnderlineIcon, action: "underline" },
-              { icon: List, action: "bulletList" },
-              { icon: ListOrdered, action: "orderedList" },
               { icon: Code, action: "codeBlock" },
               { icon: FileText, action: "paragraph" },
             ].map(({ icon: Icon, action }, i) => {
@@ -176,7 +174,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
                     (editor.chain().focus() as any)[commandKey]?.().run()
                   }
                   title={action}
-                  className="mx-1 p-2 rounded-md bg-gray-800 hover:bg-gray-700 text-white transition-colors"
+                  className="mx-1 p-2 rounded-md bg-gray-600 hover:bg-gray-500 text-white transition-colors"
                 >
                   <Icon
                     className={`w-5 h-5 transition-all duration-150 ${
@@ -189,7 +187,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
               );
             })}
 
-            <button
+            {/* <button
               type="button"
               onClick={() => {
                 const url = prompt("Enter URL");
@@ -206,7 +204,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
               title="Remove Link"
             >
               <Unlink className="w-5 h-5 text-gray-600 hover:text-black dark:hover:text-white" />
-            </button>
+            </button> */}
           </div>
         )}
 

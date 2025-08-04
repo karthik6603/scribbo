@@ -117,7 +117,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden px-4 pb-6 bg-white w-full space-y-3 animate-slide-down">
+        <div className="md:hidden px-6 pb-6 bg-white w-full space-y-3 animate-slide-down">
           <Link href="/blogs" className={navLinkClass("/blogs")} onClick={toggleMenu}>
             Blogs
           </Link>
