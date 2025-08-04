@@ -31,17 +31,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String loginUser(UserDTO userDTO) {
+    public Map<String, String> loginUser(UserDTO userDTO) {
         User user = userRepository.findByEmail(userDTO.getEmail());
         if (user == null || !passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // Build claims map
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", String.valueOf(user.getId()));
         claims.put("email", user.getEmail());
 
-        return jwtUtil.generateToken(claims, user.getEmail());
+        String token = jwtUtil.generateToken(claims, user.getEmail());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return response;
     }
+
 }
