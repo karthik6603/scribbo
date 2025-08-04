@@ -28,20 +28,18 @@ export default function Navbar() {
       : "👤";
   };
 
-  // Don’t show navbar on auth pages
-  if (!pathname) return null;
-if (["/auth/login", "/auth/signup"].includes(pathname)) return null;
-
+  // Skip navbar on auth routes
+  if (!pathname || ["/auth/login", "/auth/signup"].includes(pathname)) return null;
 
   const navLinkClass = (href: string) =>
-    `text-base font-medium px-3 py-2 rounded-xl transition-all duration-200 ease-in-out ${
+    `text-base font-medium px-4 py-2 rounded-xl transition-all duration-200 ${
       pathname === href
         ? "text-primary border-b-2 border-primary"
         : "text-muted-foreground hover:text-primary hover:bg-primary/10"
     }`;
 
   return (
-    <nav className="w-full bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm transition-all">
+    <nav className="w-full bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link
@@ -51,7 +49,7 @@ if (["/auth/login", "/auth/signup"].includes(pathname)) return null;
           Scribbo
         </Link>
 
-        {/* Desktop Links */}
+        {/* Desktop Nav */}
         <div className="hidden md:flex space-x-4 items-center">
           <Link href="/blogs" className={navLinkClass("/blogs")}>
             Blogs
@@ -104,7 +102,7 @@ if (["/auth/login", "/auth/signup"].includes(pathname)) return null;
               </Link>
               <Button
                 asChild
-                className="px-6 py-2 bg-primary text-white hover:bg-primary/90 rounded-xl transition-all"
+                className="px-6 py-2 bg-primary text-white hover:bg-primary/90 rounded-xl"
               >
                 <Link href="/auth/signup">Sign Up</Link>
               </Button>
@@ -112,7 +110,7 @@ if (["/auth/login", "/auth/signup"].includes(pathname)) return null;
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Toggle */}
         <div className="md:hidden">
           <Button variant="ghost" size="icon" onClick={toggleMenu}>
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -122,10 +120,11 @@ if (["/auth/login", "/auth/signup"].includes(pathname)) return null;
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden px-4 pb-4 animate-slide-down space-y-4">
+        <div className="md:hidden w-full px-4 pb-6 space-y-4 bg-white border-t border-gray-200 shadow-md animate-slide-down z-40">
           <Link href="/blogs" className={navLinkClass("/blogs")} onClick={toggleMenu}>
             Blogs
           </Link>
+
           {isAuthenticated && user ? (
             <>
               <Link
@@ -142,15 +141,15 @@ if (["/auth/login", "/auth/signup"].includes(pathname)) return null;
               >
                 My Blogs
               </Link>
-              <div className="pt-2 space-y-1">
+              <div className="border-t border-gray-200 pt-4 space-y-1">
                 <p className="text-sm font-medium text-gray-800">{user.name}</p>
                 <p className="text-sm text-gray-500">{user.email}</p>
                 <Button
                   variant="destructive"
-                  className="w-full"
+                  className="w-full mt-2"
                   onClick={() => {
                     logout();
-                    toggleMenu();
+                    setIsMenuOpen(false);
                     router.push("/blogs");
                   }}
                 >
@@ -169,7 +168,7 @@ if (["/auth/login", "/auth/signup"].includes(pathname)) return null;
               </Link>
               <Button
                 asChild
-                className="w-full text-center bg-primary text-white hover:bg-primary/90"
+                className="w-full text-center bg-primary text-white hover:bg-primary/90 rounded-xl py-2"
               >
                 <Link href="/auth/signup" onClick={toggleMenu}>
                   Sign Up
