@@ -10,7 +10,7 @@ const LogoutButton = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(logout());
-    router.push("/auth/login");
+    router.push("/blogs");
   };
 
   return (

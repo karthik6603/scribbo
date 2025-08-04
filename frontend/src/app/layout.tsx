@@ -36,15 +36,15 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`
-          ${geistSans.variable} 
-          ${geistMono.variable} 
-          bg-[#f9fafb] 
-          text-gray-900 
-          antialiased 
-          min-h-screen 
-          flex flex-col
-        `}
+        // className={`
+        //   ${geistSans.variable} 
+        //   ${geistMono.variable} 
+        //   bg-[#f9fafb] 
+        //   text-gray-900 
+        //   antialiased 
+        //   min-h-screen 
+        //   flex flex-col
+        // `}
       >
         <AuthProvider>
           <Navbar />
