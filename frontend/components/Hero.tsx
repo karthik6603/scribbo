@@ -6,12 +6,13 @@ export function Hero() {
   return (
     <div className="bg-white text-zinc-900">
       {/* Hero Banner */}
-      <section className="w-full py-24 px-4">
+      <section className="w-full py-18 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex justify-center mb-6">
             <div className="flex items-center gap-2 bg-zinc-100 text-cyan-600 px-4 py-2 rounded-full text-sm font-medium shadow">
               <Sparkles className="w-4 h-4 animate-pulse" />
-              Welcome to <span className="font-bold text-cyan-500">Scribbo</span>
+              Welcome to{" "}
+              <span className="font-bold text-cyan-500">Scribbo</span>
             </div>
           </div>
 
@@ -22,8 +23,9 @@ export function Hero() {
           </h1>
 
           <p className="text-lg md:text-xl text-zinc-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            A modern platform where writers connect, share ideas, and inspire one another.
-            Create beautiful stories, discover unique voices, and join a global community.
+            A modern platform where writers connect, share ideas, and inspire
+            one another. Create beautiful stories, discover unique voices, and
+            join a global community.
           </p>
 
           {/* CTA Buttons */}
@@ -70,7 +72,10 @@ export function Hero() {
                 text: "Find amazing stories across all topics.",
               },
             ].map(({ icon: Icon, title, text }, i) => (
-              <div key={i} className="text-center hover:scale-[1.02] transition-transform">
+              <div
+                key={i}
+                className="text-center hover:scale-[1.02] transition-transform"
+              >
                 <div className="bg-cyan-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Icon className="w-6 h-6 text-cyan-600" />
                 </div>
@@ -85,7 +90,9 @@ export function Hero() {
       {/* Why Scribbo Section */}
       <section className="py-16 px-4 border-t border-zinc-200 bg-zinc-50">
         <div className="max-w-6xl mx-auto text-center space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-zinc-900">Why Scribbo?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-zinc-900">
+            Why Scribbo?
+          </h2>
           <div className="grid md:grid-cols-3 gap-6 text-left">
             {[
               {
@@ -118,24 +125,32 @@ export function Hero() {
       {/* Testimonials */}
       <section className="py-16 px-4 bg-white border-t border-zinc-200">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-zinc-800">What Writers Say</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-zinc-800">
+            What Writers Say
+          </h2>
           <div className="grid md:grid-cols-2 gap-6 text-left">
             {[
               {
                 name: "Ananya D.",
-                quote: "Scribbo helped me launch my writing journey. The editor is a dream!",
+                quote:
+                  "Scribbo helped me launch my writing journey. The editor is a dream!",
               },
               {
                 name: "Rahul K.",
-                quote: "I discovered amazing readers and a community that truly values ideas.",
+                quote:
+                  "I discovered amazing readers and a community that truly values ideas.",
               },
             ].map((item, i) => (
               <div
                 key={i}
                 className="p-6 rounded-xl bg-zinc-50 border border-zinc-200 shadow-sm hover:shadow-md transition-shadow"
               >
-                <p className="text-lg md:text-xl mb-2 italic text-zinc-700">“{item.quote}”</p>
-                <p className="text-base font-semibold text-cyan-600">— {item.name}</p>
+                <p className="text-lg md:text-xl mb-2 italic text-zinc-700">
+                  “{item.quote}”
+                </p>
+                <p className="text-base font-semibold text-cyan-600">
+                  — {item.name}
+                </p>
               </div>
             ))}
           </div>
@@ -145,7 +160,9 @@ export function Hero() {
       {/* Final CTA */}
       <section className="py-20 bg-zinc-100 text-center">
         <div className="max-w-2xl mx-auto space-y-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-zinc-900">Ready to share your voice?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-zinc-900">
+            Ready to share your voice?
+          </h2>
           <p className="text-lg md:text-xl text-zinc-600">
             Join the community and publish your first story today. It’s free!
           </p>
