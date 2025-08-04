@@ -55,10 +55,13 @@ export default function MyBlogsPage() {
     if (!token) return console.error("No auth token found");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/blogs/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Delete failed with status ${response.status}`);
@@ -78,11 +81,13 @@ export default function MyBlogsPage() {
     <section className="bg-gradient-to-b from-background to-accent/10 py-16 px-4 min-h-screen">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl md:text-4xl font-bold text-center mb-10 gradient-text">
-          My Stories
+          My Blogs
         </h1>
 
         {blogs.length === 0 ? (
-          <p className="text-muted-foreground text-center text-lg">No blogs found.</p>
+          <p className="text-muted-foreground text-center text-lg">
+            No blogs found.
+          </p>
         ) : (
           <div className="grid gap-6">
             {blogs.map((blog) => (

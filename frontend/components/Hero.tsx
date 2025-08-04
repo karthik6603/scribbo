@@ -112,7 +112,7 @@ export function Hero() {
                 key={i}
                 className="p-6 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition-shadow"
               >
-                <h3 className="text-lg md:text-xl font-semibold mb-2 text-cyan-600">
+                <h3 className="text-lg md:text-xl font-semibold mb-2 gradient-text">
                   {item.title}
                 </h3>
                 <p className="text-sm text-zinc-500">{item.desc}</p>
@@ -148,7 +148,7 @@ export function Hero() {
                 <p className="text-lg md:text-xl mb-2 italic text-zinc-700">
                   “{item.quote}”
                 </p>
-                <p className="text-base font-semibold text-cyan-600">
+                <p className="text-base font-semibold text-right gradient-text">
                   — {item.name}
                 </p>
               </div>
