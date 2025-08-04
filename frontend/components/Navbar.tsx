@@ -178,7 +178,7 @@ export default function Navbar() {
                     onClick={() => {
                       logout();
                       toggleMenu();
-                      router.push("/auth/login");
+                      router.push("/blogs");
                     }}
                   >
                     Logout
