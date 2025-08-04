@@ -49,12 +49,14 @@ export default function Login() {
 
       const contentType = response.headers.get("content-type");
       const isJson = contentType?.includes("application/json");
-      const payload = isJson ? await response.json() : { message: await response.text() };
+      const payload = isJson
+        ? await response.json()
+        : { message: await response.text() };
 
       if (response.ok) {
-        const token = payload.token || payload;
+        const { token, user } = payload;
         localStorage.setItem("token", token);
-        dispatch(loginSuccess({ token }));
+        dispatch(loginSuccess({ token, user }));
         setShowModal(true);
       } else {
         setError(payload.message || "Login failed. Please try again.");
@@ -78,7 +80,9 @@ export default function Login() {
           <Form.Root onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email */}
             <Form.Field name="email" className="space-y-2">
-              <Form.Label className="block text-sm font-medium text-text">Email</Form.Label>
+              <Form.Label className="block text-sm font-medium text-text">
+                Email
+              </Form.Label>
               <Form.Control asChild>
                 <input
                   type="email"
@@ -104,7 +108,9 @@ export default function Login() {
 
             {/* Password */}
             <Form.Field name="password" className="space-y-2">
-              <Form.Label className="block text-sm font-medium text-text">Password</Form.Label>
+              <Form.Label className="block text-sm font-medium text-text">
+                Password
+              </Form.Label>
               <Form.Control asChild>
                 <input
                   type="password"
