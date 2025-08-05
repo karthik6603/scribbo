@@ -21,9 +21,7 @@ public class JwtUtil {
 
     @Value("${jwt.expiration}")
     private long expirationTime;
-    // 1 day
 
-    // This method will be called after all injections are done
     @PostConstruct
     public void init() {
         byte[] decodedKey = java.util.Base64.getDecoder().decode(secret);

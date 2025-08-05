@@ -5,42 +5,45 @@ Scribbo is a full-stack web application designed for seamless content creation, 
 ## 🚀 Live Demo
 
 👉 **Frontend**: Scribbo on Vercel  
-👉 **Backend**: Scribbo API on Render *(replace with actual URL)*  
+👉 **Backend**: Scribbo API on Render _(replace with actual URL)_  
 🌐 Or clone and run locally (instructions below)
 
 ---
 
 ## 📌 Features
 
-- 📝 **Rich Text Editor**: Create and edit blogs with Markdown support.  
-- 🔐 **User Authentication**: Secure email/password login using JWT.  
-- 📚 **Public Blog Listing**: View all blogs with pagination, accessible to everyone.  
-- 📖 **Blog Details**: Publicly viewable blog content with full details.  
-- 🗑️ **CRUD Operations**: Create, read, update, and delete blogs (edit/delete restricted to blog authors).  
-- 📱 **Responsive Design**: Fully responsive UI for desktop and mobile devices.  
-- 💾 **MongoDB Storage**: Blogs and user data stored in a NoSQL database.  
+- 📝 **Rich Text Editor**: Create and edit blogs with Markdown support.
+- 🔐 **User Authentication**: Secure email/password login using JWT.
+- 📚 **Public Blog Listing**: View all blogs with pagination, accessible to everyone.
+- 📖 **Blog Details**: Publicly viewable blog content with full details.
+- 🗑️ **CRUD Operations**: Create, read, update, and delete blogs (edit/delete restricted to blog authors).
+- 📱 **Responsive Design**: Fully responsive UI for desktop and mobile devices.
+- 💾 **MongoDB Storage**: Blogs and user data stored in a NoSQL database.
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- Next.js (React framework)  
-- Tailwind CSS  
-- TypeScript  
-- Context API  
+
+- Next.js (React framework)
+- Tailwind CSS
+- TypeScript
+- Redux
 
 ### Backend
-- Spring Boot (RESTful API)  
-- Spring Security (JWT)  
-- MongoDB (NoSQL database)  
+
+- Spring Boot (RESTful API)
+- Spring Security (JWT)
+- MongoDB (NoSQL database)
 
 ### Other Tools
-- Git & GitHub  
-- Postman (API testing)  
-- Docker (containerized deployment on Render)  
-- Vercel (frontend deployment)  
-- Render (backend deployment)  
+
+- Git & GitHub
+- Postman (API testing)
+- Docker (containerized deployment on Render)
+- Vercel (frontend deployment)
+- Render (backend deployment)
 
 ---
 
@@ -55,7 +58,6 @@ scribbo/
 ├── backend/                # Spring Boot backend
 │   ├── src/main/java/      # Java source files
 │   ├── src/main/resources/ # Configuration and static files
-├── screenshots/            # Screenshots for README
 └── README.md               # Project documentation
 ```
 
@@ -67,13 +69,13 @@ Follow these steps to set up and run Scribbo locally. The frontend is deployed o
 
 ### Prerequisites
 
-- Node.js: Version 18.x or higher  
-- Java: JDK 17 or higher  
-- Maven: For building the Spring Boot backend  
-- MongoDB: Local instance or MongoDB Atlas account  
-- Git: For cloning the repository  
-- Postman: For testing API endpoints  
-- Docker: For containerized deployment (optional)  
+- Node.js: Version 18.x or higher
+- Java: JDK 17 or higher
+- Maven: For building the Spring Boot backend
+- MongoDB: Local instance or MongoDB Atlas account
+- Git: For cloning the repository
+- Postman: For testing API endpoints
+- Docker: For containerized deployment (optional)
 
 ### Step 1: Clone the Repository
 
@@ -90,17 +92,17 @@ Navigate to the backend directory:
 cd backend
 ```
 
-Create a `.env` file in the backend directory with the following:
+Modify `application.properties` file in the backend directory with the following:
 
 ```env
 PORT=8080
 MONGODB_URI=mongodb://localhost:27017/scribbo
 JWT_SECRET=your_jwt_secret_here
-frontend.url=https://scribbo.vercel.app
+frontend.url=http://localhost:8080
 ```
 
-Replace `your_jwt_secret_here` with a secure 256-bit JWT secret. ⚠️ *Do not commit the .env file to Git to protect sensitive data.*  
-For MongoDB Atlas, replace `MONGODB_URI` with your Atlas connection string.
+Replace `your_jwt_secret_here` with a secure 512-bit JWT secret.
+For MongoDB Atlas, replace `MONGODB_URI` with your Atlas connection string or your local database url.
 
 Build and run the backend:
 
@@ -111,7 +113,7 @@ mvn spring-boot:run
 
 The backend will run on `http://localhost:8080`.
 
-### Step 3: Set Up the Frontend (Next.js, Optional)
+### Step 3: Set Up the Frontend
 
 To run the frontend locally instead of using the Vercel deployment:
 
@@ -149,7 +151,7 @@ For a local MongoDB instance, ensure it’s running:
 mongod
 ```
 
-For MongoDB Atlas, verify that `MONGODB_URI` in the backend `.env` file points to your Atlas connection string.
+For MongoDB Atlas, verify that `MONGODB_URI` in the backend `application.properties` file points to your Atlas connection string.
 
 ### Step 5: Run with Docker (Optional)
 
@@ -167,39 +169,13 @@ This starts the backend, frontend (if included), and MongoDB (if configured).
 
 ### Step 6: Test the Application
 
-- Access the frontend at https://scribbo.vercel.app or http://localhost:3000 (if running locally).  
+- Access the frontend at https://scribbo.vercel.app or http://localhost:3000 (if running locally).
 - Test API endpoints using Postman (e.g., http://localhost:8080/blogs for blog listing).
-
----
-
-## 📸 Screenshots
-
-- **API Testing in Postman**: Testing the blog creation endpoint (POST /blogs)  
-- **Blog Listing Page**: Public blog listing with pagination  
-- **Blog Creation Page**: Rich text editor for creating blogs (logged-in users only)  
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository.  
-2. Create a new branch (`git checkout -b feature/your-feature`).  
-3. Commit your changes (`git commit -m 'Add your feature'`).  
-4. Push to the branch (`git push origin feature/your-feature`).  
-5. Open a pull request.
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
 ## 📬 Contact
 
-- **GitHub**: [karthik6603](https://github.com/karthik6603)  
-- **LinkedIn**: *Your LinkedIn Profile* *(replace with actual link)*  
-- **Email**: *your.email@example.com* *(replace with actual email)*
+- **GitHub**: [karthik6603](https://github.com/karthik6603)
+- **LinkedIn**: _Your LinkedIn Profile_ _(replace with actual link)_
+- **Email**: *your.email@example.com* _(replace with actual email)_
