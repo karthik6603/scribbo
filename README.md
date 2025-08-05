@@ -1,17 +1,17 @@
 ✍️ Scribbo - A Modern Blogging Platform
-Scribbo is a full-stack web application designed for seamless content creation, editing, and publishing. Built with a focus on performance, simplicity, and a smooth user experience, Scribbo empowers users to write and manage blogs in a distraction-free environment.
+Scribbo is a full-stack web application designed for seamless content creation, editing, and publishing. Built with a focus on performance, simplicity, and user experience, Scribbo empowers users to write and manage blogs in a distraction-free environment. This project fulfills the requirements of the Full Stack Intern Assessment, featuring secure authentication, blog management, and cloud deployment.
 🚀 Live Demo
-👉 Scribbo Live🌐 Or clone and run locally (instructions below)
+👉 Frontend: Scribbo on Vercel👉 Backend: Scribbo API on Render (replace with actual URL)🌐 Or clone and run locally (instructions below)
 
 📌 Features
 
-📝 Rich Text Editor for writing blogs with Markdown support and image uploads
-🔐 JWT-based Authentication & Authorization for secure user access
-📚 View all blogs or filter by categories for easy content discovery
-🧑‍💻 User Dashboard to manage posts, view analytics, and track engagement
-🗑️ CRUD operations (Create, Read, Update, Delete) for blog management
-🌙 Dark Mode Support for comfortable viewing
-📦 Fully responsive across devices for a consistent experience
+📝 Rich Text Editor: Create and edit blogs with Markdown support.
+🔐 User Authentication: Secure email/password login using JWT.
+📚 Public Blog Listing: View all blogs with pagination, accessible to everyone.
+📖 Blog Details: Publicly viewable blog content with full details.
+🗑️ CRUD Operations: Create, read, update, and delete blogs (edit/delete restricted to blog authors).
+📱 Responsive Design: Fully responsive UI for desktop and mobile devices.
+💾 MongoDB Storage: Blogs and user data stored in a NoSQL database.
 
 
 🛠️ Tech Stack
@@ -20,25 +20,27 @@ Frontend:
 Next.js (React framework)
 Tailwind CSS
 TypeScript
-Context API (or Redux if used)
+Context API
 
 Backend:
 
 Spring Boot (RESTful API)
 Spring Security (JWT)
-MongoDB Database
+MongoDB (NoSQL database)
 
 Other Tools:
 
 Git & GitHub
-Postman (for API testing)
-Docker (contiainerized deployment in render)
+Postman (API testing)
+Docker (containerized deployment on Render)
+Vercel (frontend deployment)
+Render (backend deployment)
 
 
 📂 Project Structure
 scribbo/
-├── frontend/               # Next.js frontend
-│   ├── pages/              # Page components
+├── frontend/                # Next.js frontend
+│   ├── pages/              # Page components (e.g., login, blog listing)
 │   ├── components/         # Reusable UI components
 │   ├── styles/             # Tailwind CSS and custom styles
 ├── backend/                # Spring Boot backend
@@ -49,7 +51,7 @@ scribbo/
 
 
 🏃‍♂️ Installation and Running Instructions
-Follow these steps to set up and run Scribbo locally. The frontend is deployed at https://scribbo.vercel.app, but you can run it locally if needed.
+Follow these steps to set up and run Scribbo locally. The frontend is deployed on Vercel, and the backend is deployed on Render, but you can run both locally for development.
 Prerequisites
 
 Node.js: Version 18.x or higher
@@ -57,80 +59,94 @@ Java: JDK 17 or higher
 Maven: For building the Spring Boot backend
 MongoDB: Local instance or MongoDB Atlas account
 Git: For cloning the repository
-Postman (optional): For testing API endpoints
-Docker (optional): For containerized deployment
+Postman: For testing API endpoints
+Docker: For containerized deployment (optional)
 
 Step 1: Clone the Repository
-git clone https://github.com/your-username/scribbo.git
+git clone https://github.com/karthik6603/scribbo.git
 cd scribbo
 
 Step 2: Set Up the Backend (Spring Boot)
 
-Navigate to the backend directory:cd backend
+Navigate to the backend directory:
+cd backend
 
 
-Create a .env file in the backend directory with the following environment variables:PORT=8080
+Create a .env file in the backend directory with the following:
+PORT=8080
 MONGODB_URI=mongodb://localhost:27017/scribbo
 JWT_SECRET=your_jwt_secret_here
 frontend.url=https://scribbo.vercel.app
 
 
-Replace your_jwt_secret_here with a secure JWT secret (e.g., a 256-bit key).
-If using MongoDB Atlas, replace MONGODB_URI with your Atlas connection string (e.g., mongodb+srv://username:password@cluster0.1vgfks8.mongodb.net/scribbo?retryWrites=true&w=majority&tlsAllowInvalidHostnames=true).
+Replace your_jwt_secret_here with a secure 256-bit JWT secret. Warning: Do not commit the .env file to Git to protect sensitive data.
+For MongoDB Atlas, replace MONGODB_URI with your Atlas connection string (e.g., mongodb+srv://username:password@cluster0.mongodb.net/scribbo?retryWrites=true&w=majority).
 
 
-Build and run the backend:mvn clean install
+Build and run the backend:
+mvn clean install
 mvn spring-boot:run
 
 The backend will run on http://localhost:8080.
 
+
 Step 3: Set Up the Frontend (Next.js, Optional)
-If you want to run the frontend locally instead of using the deployed version:
+To run the frontend locally instead of using the Vercel deployment:
 
-Open a new terminal and navigate to the frontend directory:cd frontend
-
-
-Install dependencies:npm install
+Open a new terminal and navigate to the frontend directory:
+cd frontend
 
 
-Create a .env.local file in the frontend directory:NEXT_PUBLIC_API_URL=http://localhost:8080/api
+Install dependencies:
+npm install
 
 
-Start the development server:npm run dev
+Create a .env.local file in the frontend directory:
+NEXT_PUBLIC_API_URL=http://localhost:8080
+
+
+Start the development server:
+npm run dev
 
 The frontend will run on http://localhost:3000.
 
+
 Step 4: Set Up MongoDB
 
-If using a local MongoDB instance, ensure it’s running:mongod
+For a local MongoDB instance, ensure it’s running:
+mongod
 
 
-If using MongoDB Atlas, ensure the MONGODB_URI in the backend .env file points to your Atlas connection string.
+For MongoDB Atlas, verify that MONGODB_URI in the backend .env file points to your Atlas connection string.
 
-Step 5: (Optional) Run with Docker
-If you prefer a containerized setup:
+
+Step 5: Run with Docker (Optional)
+To run the application using Docker (as deployed on Render):
 
 Ensure Docker and Docker Compose are installed.
-Create a docker-compose.yml file (if not already present) and run:docker-compose up --build
 
-This will start the backend, frontend (if included), and MongoDB (if configured).
+Run the following command in the root directory:
+docker-compose up --build
+
+This starts the backend, frontend (if included), and MongoDB (if configured).
+
 
 Step 6: Test the Application
 
-Access the frontend at https://scribbo.vercel.app (or http://localhost:3000 if running locally).
-Use Postman to test API endpoints (e.g., http://localhost:8080/api/blogs).
+Access the frontend at https://scribbo.vercel.app or http://localhost:3000 (if running locally).
+Test API endpoints using Postman (e.g., http://localhost:8080/blogs for blog listing).
 
 
 📸 Screenshots
 API Testing in Postman
-Testing the blog creation endpoint (POST /api/blogs):
-
-User Dashboard
-The user dashboard for managing blogs:
-
-
+Testing the blog creation endpoint (POST /blogs):
+### Blog Listing Page
+Public blog listing with pagination:
+### Blog Creation Page
+Rich text editor for creating blogs (logged-in users only):
+---
 🤝 Contributing
-Contributions are welcome! Please follow these steps:
+Contributions are welcome! To contribute:
 
 Fork the repository.
 Create a new branch (git checkout -b feature/your-feature).
@@ -141,3 +157,11 @@ Open a pull request.
 
 📜 License
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+📬 Contact
+For questions or feedback, reach out to me:
+
+GitHub: karthik6603
+LinkedIn: Your LinkedIn Profile (replace with actual link)
+
+Email: your.email@example.com (replace with actual email)
